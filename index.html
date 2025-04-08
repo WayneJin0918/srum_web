@@ -1,4 +1,1252 @@
-<!DOCTYPE html>
-<html>
-Working in Progress
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Transfer between Modalities with MetaQueries</title>
+        <link rel="icon" type="image/x-icon" href="/static/img/icons/icon.png">
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Open Graph -->
+        <meta property="og:url" content="https://cambrian-mllm.github.io/" />
+        <meta property="og:image" content="https://cambrian-mllm.github.io/static/img/preview.png" />
+        <meta property="og:title" content="Transfer between Modalities with MetaQueries" />
+        <meta property="og:description" content="Cambrian-1 is a family of multimodal LLMs with a vision-centric design. We also release CV-Bench, a new vision-centric benchmark, and Cambrian-10M, a multimodal instruction-tuning dataset." />
+
+        <!-- Twitter -->
+        <meta name="twitter:url" content="https://cambrian-mllm.github.io/" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:image" content="https://cambrian-mllm.github.io/static/img/preview.png" />
+        <meta name="twitter:title" content="Transfer between Modalities with MetaQueries" />
+        <meta name="twitter:description" content="Cambrian-1 is a family of multimodal LLMs with a vision-centric design. We also release CV-Bench, a new vision-centric benchmark, and Cambrian-10M, a multimodal instruction-tuning dataset." />
+
+        <script src="./static/js/distill_template.v2.js"></script>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+        <script src="https://d3js.org/d3.v5.min.js"></script>
+        <script src="https://d3js.org/d3-collection.v1.min.js"></script>
+        <script src="https://rawgit.com/nstrayer/slid3r/master/dist/slid3r.js"></script>
+
+        <script defer="" src="./static/js/hider.js"></script>
+        <script src="./static/js/image_interact.js"></script>
+        <script src="./static/js/switch_videos.js"></script>
+
+        <link rel="stylesheet" href="./static/css/style.css">
+        <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js" integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+            onload="renderMathInElement(document.body);"></script>
+        <script defer src="./static/js/fontawesome.all.min.js"></script>
+
+
+        <!-- medium zoom https://github.com/francoischalifour/medium-zoom -->
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>  <!-- jquery -->
+        <script defer src="./static/js/medium-zoom.min.js"></script>
+        <script defer src="./static/js/zoom.js"></script>
+        <script defer src="./static/js/gallery.js"></script>
+    </head>
+    <body>
+        <div class="header-wrapper">
+            <div class="header-container" id="header-container">
+                <div class="header-content">
+                    <h1 style="margin-top: 0px"><i>Transfer between Modalities with MetaQueries</i></h1>
+                        <p>
+                            Introducing MetaQuery, a minimal recipe for building state-of-the-art unified multimodal models:
+                        </p>
+
+                        <div class="icon-container">
+                            <div class="icon-item">
+                                <img src="./static/img/icons/query.svg" alt="metaquery Icon">
+                                <div><strong>MetaQuery</strong>: We introduce MetaQuery, a set of learnable queries that efficiently connect autoregressive multimodal LLMs (MLLMs) with diffusion-based image generators.</div>
+                            </div>
+                            <div class="icon-item">
+                                <img src="./static/img/icons/transfer.svg" alt="transfer Icon">
+                                <div><strong>Transfer</strong>: This simple approach enables the world knowledge, strong reasoning and in-context learning capabilities inherent in MLLMs to be transferred to image generation.</div>
+                            </div>
+                            <div class="icon-item">
+                                <img src="./static/img/icons/freeze.svg" alt="frozen Icon">
+                                <div><strong>Frozen MLLM</strong>: This transfer is effective even when the MLLM backbone remains frozen, thereby preserving its state-of-the-art multimodal understanding capabilities while achieving strong generative performance. </div>
+                            </div>
+                        </div>
+
+                    <div class="button-container">
+                        <!-- replace arxiv -->
+                        <a href="#" class="button paper-link" target="_blank">
+                            <span class="icon is-small">
+                                <i class="ai ai-arxiv"></i>
+                            </span>
+                            arXiv
+                        </a>
+                        <!-- replace pdf -->
+                        <a href="#" class="button paper-link" target="_blank">
+                            <span class="icon is-small">
+                                <i class="fas fa-file-pdf"></i>
+                            </span>
+                            <span>pdf</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="header-image">
+                    <img draggable="false" src="static/img/teaser.png" alt="Teaser Image" class="teaser-image">
+                </div>
+            </div>
+        </div>
+    <d-article>
+        <div class="byline">
+            <div class="byline-container">
+                <p>
+                    <a href="https://xichenpan.com/" class="author-link" target="_blank">Xichen Pan<sup>1,2</sup></a> &emsp;
+                    <a href="https://satyanshukla.github.io/" class="author-link" target="_blank">Satya Narayan Shukla<sup>1,&dagger;</sup></a> &emsp;
+                    <a href="https://www.linkedin.com/in/aashu-singh-030ab646/" class="author-link" target="_blank">Aashu Singh<sup>1</sup></a> &emsp;
+                    <a href="https://zhuokai-zhao.com/" class="author-link" target="_blank">Zhuokai Zhao<sup>1</sup></a> &emsp;
+                    <a href="https://shlokk.github.io/shlokmishra.github.io/" class="author-link" target="_blank">Shlok Kumar Mishra<sup>1</sup></a> &emsp;
+                    <a href="https://sites.google.com/view/jialiangwang/home" class="author-link" target="_blank">Jialiang Wang<sup>1</sup></a> &emsp;
+                    <a href="https://scholar.google.com/citations?user=Qcshi8UAAAAJ&hl=en" class="author-link" target="_blank">Zhiyang Xu<sup>1</sup></a> &emsp;
+                    <a href="https://scholar.google.com/citations?user=eJP77eoAAAAJ&hl=en" class="author-link" target="_blank">Jiuhai Chen<sup>1</sup></a> &emsp;
+                    <a href="https://kunpengli1994.github.io/" class="author-link" target="_blank">Kunpeng Li<sup>1</sup></a> &emsp;
+                    <a href="https://xujuefei.com/" class="author-link" target="_blank">Felix Juefei-Xu<sup>1</sup></a> &emsp;
+                    <a href="https://sekunde.github.io" class="author-link" target="_blank">Ji Hou<sup>1,&dagger;</sup></a> &emsp;
+                    <a href="https://www.sainingxie.com/" class="author-link" target="_blank">Saining Xie<sup>2,&dagger;</sup></a>
+                    <p></p>
+                </p>
+                <p style="text-align: center;">
+                    <a href="https://ai.meta.com/" class="affiliation-link" target="_blank"><sup>1</sup>Meta</a> &emsp;
+                    <a href="https://cs.nyu.edu/home/index.html" class="affiliation-link" target="_blank"><sup>2</sup>New York University</a>
+                </p>
+                <p style="text-align: center; margin-bottom: 0;">
+                    <span class="author-note"><sup>&dagger;</sup>Equal advising</span>
+                </p>
+            </div>
+        </div>
+        <p class="text abstract">
+            We introduce MetaQueries, a set of learnable queries that efficiently connect autoregressive multimodal LLMs (MLLMs) with diffusion-based image generators. This simple approach enables the generative decoder to directly leverage the rich semantic understanding, reasoning capabilities, and world knowledge inherent in MLLMs for knowledge-augmented image generation.
+
+            <br><br>
+            This blogpost is structured around three key components:
+            <ol class="text">
+                <li><strong><a href="#MetaQuery">&sect;MetaQuery</a></strong>: We introduce MetaQuery and carefully analyze the impact of applying MetaQuery on image generation performance in a controlled setting.</li>
+                <li><strong><a href="#Instruction Tuning Data">&sect;Instruction Tuning Data</a></strong>: We proposed a scalable data curation pipeline that directly leverages naturally occurring image pairs from web corpora, surprisingly unlocks several new capabilities like visual association and logo design.</li>
+                <li><strong><a href="#Performance">&sect;Performance</a></strong>: We demonstrate our method can preserve SOTA multimodal understanding capabilities while achieving SOTA-level generative performance. We also show great performance on image reconstruction and editing, subject-driven generation, reasoning- and knowledge-based image generation.</li>
+            </ol>
+        </p>
+
+        <div class="icon-row">
+            <a href="#MetaQuery" class="icon-link">
+                <img src="static/img/icons/query.svg" alt="MetaQuery Logo" class="icon">
+                MetaQuery
+            </a>
+            <a href="#Instruction Tuning Data" class="icon-link">
+                <img src="static/img/icons/database.svg" alt="Instruction Tuning Data Logo" class="icon">
+                Instruction Tuning Data
+            </a>
+            <a href="#Performance" class="icon-link">
+                <img src="static/img/icons/image.svg" alt="Performance Logo" class="icon">
+                Performance
+            </a>
+        </div>
+
+        <p class="click-hint" style="width: 85%;">
+            <img src="static/img/icons/click.gif" style="width: 1.5rem">
+            <strong>Click to jump to each section.</strong>
+        </p>
+
+        <!-- Demo Showcase Section -->
+        <div class="demo-showcase">
+            <div class="gallery-container">
+                <div class="gallery-controls">
+                    <button class="gallery-btn prev-btn" onclick="prevGallery()">← Previous</button>
+                    <div class="gallery-title">Text-to-Image Generation</div>
+                    <button class="gallery-btn next-btn" onclick="nextGallery()">Next →</button>
+                </div>
+                
+                <div class="gallery-content">
+                    <!-- Text-to-Image Gallery -->
+                    <div class="gallery active" id="text-to-image">
+                        <div class="gallery-grid">
+                            <div class="gallery-item">
+                                <img src="static/demo/t2i/1.png" alt="Text-to-Image Example 1">
+                                <p class="caption">A british shorthair wearing sunglasses</p>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="static/demo/t2i/2.png" alt="Text-to-Image Example 2">
+                                <p class="caption">An old rusted robot wearing pants and a jacket riding skis in a supermarket.</p>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="static/demo/t2i/3.png" alt="Text-to-Image Example 3">
+                                <p class="caption">A giant humanoid, made of fluffy blue cotton candy, stomping on the ground, and roaring to the sky, clear blue sky behind them.</p>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="static/demo/t2i/4.png" alt="Text-to-Image Example 4">
+                                <p class="caption">The word 'START' written on a street surface.</p>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="static/demo/t2i/5.png" alt="Text-to-Image Example 5">
+                                <p class="caption">Close-up of a bright blue parrot's feathers glittering in the light, showing its unique plumage and vibrant colors.</p>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="static/demo/t2i/6.png" alt="Text-to-Image Example 6">
+                                <p class="caption">A sunken ship at the bottom of the ocean.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instruction Tuning Gallery -->
+                    <div class="gallery" id="instruction-tuning">
+                        <div class="gallery-grid">
+                            <div class="gallery-item">
+                                <div class="image-comparison">
+                                    <img src="static/demo/inst/12.png" alt="Instruction Example 1" class="modified-image">
+                                    <img src="static/demo/inst/11.jpg" alt="Instruction Example 1" class="original-image">
+                                    <div class="slider"></div>
+                                </div>
+                                <p class="caption">Top view of the same berry bowl</p>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="image-comparison">
+                                    <img src="static/demo/inst/22.png" alt="Instruction Example 2" class="modified-image">
+                                    <img src="static/demo/inst/21.jpg" alt="Instruction Example 2" class="original-image">
+                                    <div class="slider"></div>
+                                </div>
+                                <p class="caption">The same robot in Minecraft</p>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="image-comparison">
+                                    <img src="static/demo/inst/32.png" alt="Instruction Example 3" class="modified-image">
+                                    <img src="static/demo/inst/31.png" alt="Instruction Example 3" class="original-image">
+                                    <div class="slider"></div>
+                                </div>
+                                <p class="caption">The same model but a real one in New York city</p>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="image-comparison">
+                                    <img src="static/demo/inst/42.png" alt="Instruction Example 4" class="modified-image">
+                                    <img src="static/demo/inst/41.jpg" alt="Instruction Example 4" class="original-image">
+                                    <div class="slider"></div>
+                                </div>
+                                <p class="caption">The skyline view of the city from this building</p>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="image-comparison">
+                                    <img src="static/demo/inst/52.png" alt="Instruction Example 5" class="modified-image">
+                                    <img src="static/demo/inst/51.jpg" alt="Instruction Example 5" class="original-image">
+                                    <div class="slider"></div>
+                                </div>
+                                <p class="caption">The statue in the same city</p>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="image-comparison">
+                                    <img src="static/demo/inst/62.png" alt="Instruction Example 6" class="modified-image">
+                                    <img src="static/demo/inst/61.jpg" alt="Instruction Example 6" class="original-image">
+                                    <div class="slider"></div>
+                                </div>
+                                <p class="caption">A logo for the same teapot</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reasoning Gallery -->
+                    <div class="gallery" id="reasoning">
+                        <div class="gallery-grid">
+                            <div class="gallery-item">
+                                <img src="static/demo/augment/1.png" alt="Reasoning Example 1">
+                                <p class="caption">The national flag of the country where Yellowstone National Park is located.</p>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="static/demo/augment/2.png" alt="Reasoning Example 2">
+                                <p class="caption">The animal associated with having (2+7) lives.</p>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="static/demo/augment/3.png" alt="Reasoning Example 3">
+                                <p class="caption">The flower celebrated in spring festivals in the country where sushi originated.</p>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="static/demo/augment/4.png" alt="Reasoning Example 4">
+                                <p class="caption">The tallest building dominates the skyline of the city known as the City of Light.</p>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="static/demo/augment/5.png" alt="Reasoning Example 5">
+                                <p class="caption">A phone with a drained battery.</p>
+                            </div>
+                            <div class="gallery-item">
+                                <img src="static/demo/augment/6.png" alt="Reasoning Example 6">
+                                <p class="caption">A night sky on a new moon night.</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Image Editing Gallery -->
+                    <div class="gallery" id="image-editing">
+                        <div class="gallery-grid">
+                            <div class="gallery-item">
+                                <div class="image-comparison">
+                                    <img src="static/demo/edit/12.png" alt="Edited Image" class="modified-image">
+                                    <img src="static/demo/edit/11.jpeg" alt="Original Image" class="original-image">
+                                    <div class="slider"></div>
+                                </div>
+                                <p class="caption">Add a chef hat to the dog</p>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="image-comparison">
+                                    <img src="static/demo/edit/42.png" alt="Edited Image" class="modified-image">
+                                    <img src="static/demo/edit/41.jpeg" alt="Original Image" class="original-image">
+                                    <div class="slider"></div>
+                                </div>
+                                <p class="caption">Replace the dog with a golden retriever</p>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="image-comparison">
+                                    <img src="static/demo/edit/52.png" alt="Edited Image" class="modified-image">
+                                    <img src="static/demo/edit/51.jpeg" alt="Original Image" class="original-image">
+                                    <div class="slider"></div>
+                                </div>
+                                <p class="caption">Change to cartoon style</p>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="image-comparison">
+                                    <img src="static/demo/edit/62.png" alt="Edited Image" class="modified-image">
+                                    <img src="static/demo/edit/61.jpeg" alt="Original Image" class="original-image">
+                                    <div class="slider"></div>
+                                </div>
+                                <p class="caption">Change it into lineart style</p>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="image-comparison">  
+                                    <img src="static/demo/edit/72.png" alt="Edited Image" class="modified-image">
+                                    <img src="static/demo/edit/71.jpeg" alt="Original Image" class="original-image">
+                                    <div class="slider"></div>
+                                </div>
+                                <p class="caption">Chenage the bird to a blue one</p>
+                            </div>
+                            <div class="gallery-item">
+                                <div class="image-comparison">
+                                    <img src="static/demo/edit/82.png" alt="Edited Image" class="modified-image">
+                                    <img src="static/demo/edit/81.jpeg" alt="Original Image" class="original-image">
+                                    <div class="slider"></div>
+                                </div>
+                                <p class="caption">Replace the fries with salad</p>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        <div id='MetaQuery' class="vision-block">
+            <div id="sec:metaquery" class="sub-section">
+                <h1 class="text">MetaQuery</h1>
+                    <p class="text">
+                        MetaQuery bridges frozen MLLMs with diffusion models. We use randomly initialized learnable queries to query out the conditions for generation. For simplicity and compatibility, we continue to use causal masking for the entire sequence. The conditions are then fed into a trainable connector to align with the input space of text-to-image diffusion models. The whole model is trained with the original generation objective on paired data.
+                    </p>
+                    <d-figure>
+                        <figure>
+                            <img data-zoomable="" draggable="false" src="static/img/metaquery.png" alt="MetaQuery">
+                            <figcaption style="text-align: left;">
+                                <strong>Figure 1:</strong> Overview of our model. <span style="background-color: #B3C5F9;">Blue tokens</span> maintain SOTA multimodal understanding; <span style="background-color: #EEA49F;">MetaQuery</span> are learnable queries that directly applied to frozen MLLMs to query out conditions for generation. The model is tuned using only denoising objective with paired data. The generative diffusion models can be either frozen or further instruction-tuned for advanced generation tasks.
+                            </figcaption>
+                        </figure>
+                    </d-figure>
+
+                    <p class="text">
+                        The proposed architecture involves two design choices: using <strong>learnable queries</strong> and keeping the <strong>MLLM backbone frozen</strong>. We explain the reasons why we adopted these choices and how they impact performance. We report FID score on MJHQ-30K for visual aesthetic quality, and GenEval and DPG-Bench (both without prompt rewriting) for prompt alignment, respectively.
+                    </p>
+
+                    <p class="text">
+                        <strong>Learnable Queries:</strong> While many models use the (M)LLM's last layer embedding of input tokens for image generation, this approach limits unified modeling capabilities such as in-context learning and multimodal outputs. Our experiments show that learnable queries with just 64 tokens achieve comparable image generation quality to using last layer embeddings while unlocking the MLLM's in-context learning capability. Increasing to 512 tokens further improves performance, even surpassing the last layer embedding approach.
+                    </p>
+
+                    <div style="display: flex; flex-direction: column; align-items: center;">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th><strong>Methods</strong></th>
+                                        <th><strong>Number of Tokens</strong></th>
+                                        <th><strong>MJHQ-30K FID ↓</strong></th>
+                                        <th><strong>GenEval ↑</strong></th>
+                                        <th><strong>DPG-Bench ↑</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>LLM last layer embedding<sup>*</sup></td>
+                                        <td>-</td>
+                                        <td>7.49</td>
+                                        <td>0.55</td>
+                                        <td>78.41</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Learnable queries</td>
+                                        <td>64</td>
+                                        <td>7.43</td>
+                                        <td class="highlight">0.56</td>
+                                        <td>75.35</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Learnable queries</td>
+                                        <td>512</td>
+                                        <td class="highlight">7.34</td>
+                                        <td class="highlight">0.56</td>
+                                        <td class="highlight">78.43</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <figure style="text-align: center;">
+                        <figcaption style="text-align: left; width: 100%; align-self: stretch;">
+                            <strong>Table 1:</strong> Study on different conditions for image generation. <sup>*</sup> denotes the embeddings of input tokens.
+                        </figcaption>
+                    </figure>
+                    
+                    <p class="text">
+                        <strong>Frozen MLLMs:</strong> We keep the MLLM backbone frozen to preserve its understanding capabilities while avoiding complex training. Our experiments show that frozen MLLMs perform comparably to fully-tuned models, with slightly better visual quality but lower prompt alignment. This suggests that MetaQuery is another possible training strategy, one that is simpler but also effective, as an alternative to fine-tuning the entire MLLM.
+                    </p>
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th><strong>Methods</strong></th>
+                                    <th><strong>Train LLM</strong></th>
+                                    <th><strong>Train DiT</strong></th>
+                                    <th><strong>MJHQ-30K FID ↓</strong></th>
+                                    <th><strong>GenEval ↑</strong></th>
+                                    <th><strong>DPG-Bench ↑</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>MLLM tuning</td>
+                                    <td>✓</td>
+                                    <td>✗</td>
+                                    <td>7.75</td>
+                                    <td>0.58</td>
+                                    <td>78.97</td>
+                                </tr>
+                                <tr>
+                                    <td>E2E tuning</td>
+                                    <td>✓</td>
+                                    <td>✓</td>
+                                    <td>6.28</td>
+                                    <td class="highlight">0.61</td>
+                                    <td class="highlight">79.39</td>
+                                </tr>
+                                <tr>
+                                    <td>Frozen MLLM</td>
+                                    <td>✗</td>
+                                    <td>✗</td>
+                                    <td>7.43</td>
+                                    <td>0.56</td>
+                                    <td>75.35</td>
+                                </tr>
+                                <tr>
+                                    <td>Frozen MLLM</td>
+                                    <td>✗</td>
+                                    <td>✓</td>
+                                    <td class="highlight">6.06</td>
+                                    <td class="highlight">0.61</td>
+                                    <td>76.66</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <figure style="text-align: center;">
+                <figcaption style="text-align: left; width: 100%;">
+                    <strong>Table 2:</strong> Study on strategies for adapting MLLMs. The methods without training LLM do not suffer from multimodal understanding degradation.
+                </figcaption>
+            </figure>
+
+            <div id="sec:training_recipe" class="sub-section">
+                <h1 class="text">Training Recipe</h1>
+                    <p class="text">
+                        We further study key training options for the two main components of MetaQuery: the <strong>number of tokens</strong> and <strong>connector design</strong>.
+                    </p>
+
+                    <p class="text">
+                        <strong>Number of Tokens:</strong> We observe promising scaling results on both text-to-image generation and image reconstruction.
+                    </p>
+                    <d-figure>
+                        <figure style="text-align: center;">
+                            <img data-zoomable="" draggable="false" src="static/img/num_of_tokens.png" alt="Number of Tokens" style="width: 65%;">
+                            <figcaption style="text-align: left; width: 100%;">
+                                <strong>Figure 2:</strong> Study on the scaling of token numbers on text-to-image generation. As the number of tokens increases, prompt alignment results consistently improve.
+                            </figcaption>
+                        </figure>
+                    </d-figure>
+
+                    <d-figure>
+                        <figure>
+                            <img data-zoomable="" draggable="false" src="static/img/num_of_tokens_rec_samples.png" alt="Number of Tokens Rec Samples">
+                            <figcaption style="text-align: left; width: 100%;">
+                                <strong>Figure 3:</strong> Visaul samples for image reconstruction with different numbers of tokens.
+                            </figcaption>
+                        </figure>
+                    </d-figure>
+
+                    <p class="text">
+                        <strong>Connector Design:</strong> We study two connector designs: Projection Before Encoder (Proj-Enc) and Projection After Encoder (Enc-Proj). Enc-Proj first aligns conditions in the MLLM hidden dimension before projecting to the diffusion decoder input dimension, achieving better performance with fewer parameters than Proj-Enc.
+                    </p>
+
+                <div style="display: flex; flex-direction: column; align-items: center;">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Architecture</th>
+                                    <th># of Layers</th>
+                                    <th>Dims</th>
+                                    <th># of Params</th>
+                                    <th>Rel. Wall Time</th>
+                                    <th>MJHQ-30K FID ↓</th>
+                                    <th>GenEval ↑</th>
+                                    <th>DPG-Bench ↑</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Proj-Enc</td>
+                                    <td>6</td>
+                                    <td>2304</td>
+                                    <td>517M</td>
+                                    <td>1.06x</td>
+                                    <td>7.80</td>
+                                    <td>0.53</td>
+                                    <td>73.37</td>
+                                </tr>
+                                <tr>
+                                    <td>Proj-Enc</td>
+                                    <td>24</td>
+                                    <td>2304</td>
+                                    <td>2046M</td>
+                                    <td>1.23x</td>
+                                    <td class="highlight">7.41</td>
+                                    <td>0.51</td>
+                                    <td>73.75</td>
+                                </tr>
+                                <tr>
+                                    <td>Enc-Proj</td>
+                                    <td>6</td>
+                                    <td>896</td>
+                                    <td>84M</td>
+                                    <td>1x</td>
+                                    <td>7.73</td>
+                                    <td>0.49</td>
+                                    <td>71.39</td>
+                                </tr>
+                                <tr>
+                                    <td>Enc-Proj</td>
+                                    <td>24</td>
+                                    <td>896</td>
+                                    <td>316M</td>
+                                    <td>1.06x</td>
+                                    <td>7.43</td>
+                                    <td class="highlight">0.56</td>
+                                    <td class="highlight">75.35</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <figure style="text-align: center;">
+                    <figcaption style="text-align: left; width: 100%;">
+                        <strong>Table 3:</strong> Study on connector design.
+                    </figcaption>
+                </figure>
+            </div>
+        </div>
+
+        <div id='Instruction Tuning Data' class="vision-block">
+            <h1 class="text">Instruction Tuning Data</h1>
+            <p class="text">
+            We choose to use a scalable data curation pipeline that directly leverages naturally occurring image pairs from web corpora, instead of depending on human-created pairs or synthetically generated data. These image pairs often exhibit meaningful associations and specific relationships spanning a broad spectrum.
+            </p>
+
+            <p class="text">
+                We first cluster images with similar captions and designate one image as the target. This process yields 2.4M image pairs. Finally, we employ Qwen2.5-VL 3B to generate instructions for each pair, describing how to transform the source images into the target image.
+            </p>
+
+            <d-figure>
+                <figure style="text-align: center;">
+                    <img data-zoomable="" draggable="false" src="static/img/data.png" alt="Instruction Tuning Data Construction" style="width: 75%;">
+                    <figcaption style="text-align: left; width: 100%;">
+                        <strong>Figure 4:</strong> Overview of instruction tuning data curation pipeline. We group images from web corpora based on caption similarity, then construct instruction-tuning data from these image pairs using an MLLM.
+                    </figcaption>
+                </figure>
+            </d-figure>
+            
+        </div>
+
+        <div id='Performance' class="vision-block">
+            <h1 class="text">Image Understanding and Generation</h1>
+            <p class="text">
+                Finally, We train our models on three different MLLM backbones for different sizes: Base (LLaVA-OneVision 0.5B), Large (Qwen2.5-VL 3B), and X-Large (Qwen2.5-VL 7B). We set the number of tokens to 256 for all models, and utilize a 24-layer connector with Enc-Proj architecture. For image generation heads, we tested two different diffusion models: Stable Diffusion v1.5 and Sana-1.6B. Our model family demonstrates strong capabilities across both understanding and generation tasks. All of our models in different sizes exhibit competitive performance on all understanding benchmarks. In terms of image generation, MetaQuery achieves SOTA visual quality on MJHQ-30K, and closely match the SOTA prompt alignment results on GenEval and DPG-Bench.
+            </p>
+            <div style="display: flex; flex-direction: column; align-items: center;" class="figure">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                        <tr>
+                            <th style="text-align: left;">Methods</th>
+                            <th style="text-align: left;">Base (M)LLM</th>
+                            <th>MME-P</th>
+                            <th>MMB</th>
+                            <th>SEED</th>
+                            <th>MMMU</th>
+                            <th>MM-Vet</th>
+                            <th>COCO FID ↓</th>
+                            <th>MJHQ FID ↓</th>
+                            <th>GenEval ↑</th>
+                            <th>DPG-Bench ↑</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="text-align: left;">Emu</td>
+                            <td style="text-align: left;">LLaMA 13B</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>11.66</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">DreamLLM</td>
+                            <td style="text-align: left;">Vicuna 7B</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>36.6</td>
+                            <td>8.46</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">Chameleon</td>
+                            <td style="text-align: left;">From Scratch 7B</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>22.4</td>
+                            <td>8.3</td>
+                            <td>26.74</td>
+                            <td>-</td>
+                            <td>0.39</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">Show-o-512</td>
+                            <td style="text-align: left;">Phi-1.5 1.3B</td>
+                            <td>1097.2</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>26.7</td>
+                            <td>-</td>
+                            <td>9.24</td>
+                            <td>15.18</td>
+                            <td>0.68</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">VILA-U</td>
+                            <td style="text-align: left;">LLaMA-2 7B</td>
+                            <td>1401.8</td>
+                            <td>-</td>
+                            <td>59.0</td>
+                            <td>-</td>
+                            <td>33.5</td>
+                            <td>-</td>
+                            <td>7.69</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">Emu3</td>
+                            <td style="text-align: left;">From Scratch 7B</td>
+                            <td>-</td>
+                            <td>58.5</td>
+                            <td>68.2</td>
+                            <td>31.6</td>
+                            <td>37.2</td>
+                            <td>12.80</td>
+                            <td>-</td>
+                            <td>0.66†</td>
+                            <td>80.60</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">MetaMorph</td>
+                            <td style="text-align: left;">LLaMA-3 8B</td>
+                            <td>-</td>
+                            <td>75.2</td>
+                            <td>71.8</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>11.8</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">TokenFlow-XL</td>
+                            <td style="text-align: left;">Qwen-2.5 14B</td>
+                            <td>1551.1</td>
+                            <td>76.8</td>
+                            <td>72.6</td>
+                            <td>43.2</td>
+                            <td>48.2</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>0.63†</td>
+                            <td>73.38</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">Transfusion</td>
+                            <td style="text-align: left;">From Scratch 7B</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>8.70</td>
+                            <td>-</td>
+                            <td>0.63</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">LMFusion</td>
+                            <td style="text-align: left;">LLaVA-Next 8B</td>
+                            <td>1603.7</td>
+                            <td>72.1</td>
+                            <td>72.5</td>
+                            <td>41.7</td>
+                            <td>-</td>
+                            <td class="highlight">8.20</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">Janus</td>
+                            <td style="text-align: left;">DeepSeek-LLM 1.5B</td>
+                            <td>1338.0</td>
+                            <td>69.4</td>
+                            <td>63.7</td>
+                            <td>30.5</td>
+                            <td>34.3</td>
+                            <td>8.53</td>
+                            <td>10.10</td>
+                            <td>0.61</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">JanusFlow</td>
+                            <td style="text-align: left;">DeepSeek-LLM 1.5B</td>
+                            <td>1333.1</td>
+                            <td>74.9</td>
+                            <td>70.5</td>
+                            <td>29.3</td>
+                            <td>30.9</td>
+                            <td>-</td>
+                            <td>9.51</td>
+                            <td>0.63</td>
+                            <td>80.09</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">Janus-Pro-1B</td>
+                            <td style="text-align: left;">DeepSeek-LLM 1.5B</td>
+                            <td>1444.0</td>
+                            <td>75.5</td>
+                            <td>68.3</td>
+                            <td>36.3</td>
+                            <td>39.8</td>
+                            <td>-</td>
+                            <td>14.33‡</td>
+                            <td>0.73</td>
+                            <td>82.63</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">Janus-Pro-7B</td>
+                            <td style="text-align: left;">DeepSeek-LLM 7B</td>
+                            <td>1567.1</td>
+                            <td>79.2</td>
+                            <td>72.1</td>
+                            <td>41.0</td>
+                            <td>50.0</td>
+                            <td>-</td>
+                            <td>13.48‡</td>
+                            <td class="highlight">0.80</td>
+                            <td class="highlight">84.19</td>
+                        </tr>
+                        <tr>
+                            <td colspan="11" style="border-bottom: 2px solid #ccc; height: 2px; padding: 0;"></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">MetaQuery-B</td>
+                            <td style="text-align: left;">LLaVA-ov 0.5B</td>
+                            <td>1238.0</td>
+                            <td>58.5</td>
+                            <td>66.6</td>
+                            <td>31.4</td>
+                            <td>29.1</td>
+                            <td>8.91</td>
+                            <td>6.28</td>
+                            <td>0.74†</td>
+                            <td>80.04</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">MetaQuery-L</td>
+                            <td style="text-align: left;">Qwen2.5-VL 3B</td>
+                            <td>1574.3</td>
+                            <td>78.6</td>
+                            <td>73.8</td>
+                            <td>53.1</td>
+                            <td>63.2</td>
+                            <td>8.87</td>
+                            <td>6.35</td>
+                            <td>0.78†</td>
+                            <td>81.10</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">MetaQuery-XL</td>
+                            <td style="text-align: left;">Qwen2.5-VL 7B</td>
+                            <td class="highlight">1685.2</td>
+                            <td class="highlight">83.5</td>
+                            <td class="highlight">76.9</td>
+                            <td class="highlight">58.6</td>
+                            <td class="highlight">66.6</td>
+                            <td>8.69</td>
+                            <td class="highlight">6.02</td>
+                            <td>0.80†</td>
+                            <td>82.05</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <figure style="text-align: center;">
+                <figcaption style="text-align: left; width: 100%;">
+                    <strong>Table 4:</strong> Quantitative results on multimodal understanding and generation benchmarks. We report the COCO FID with Stable Diffusion v1.5, and other metrics with Sana. † denotes rewritten prompts. ‡ denotes results tested by us under the same settings.
+                </figcaption>
+            </figure>
+
+            <d-figure>
+                <figure style="text-align: center;">
+                    <img data-zoomable="" draggable="false" src="static/img/t2i.png" alt="Qualitative Results">
+                    <figcaption style="text-align: left; width: 100%;">
+                        <strong>Figure 5:</strong> Qualitative results on text-to-image generation.
+                    </figcaption>
+                </figure>
+            </d-figure>
+
+            <h1 class="text">Image Reconstruction</h1>
+            <p class="text">
+                We demonstrate that MetaQuery can be easily fine-tuned for image reconstruction tasks with a frozen MLLM. Our model achieves comparable quality to SOTA models.
+            </p>
+
+            <d-figure>
+                <figure style="text-align: center;">
+                    <img data-zoomable="" draggable="false" src="static/img/image_reconstruction.png" alt="Image Reconstruction">
+                    <figcaption style="text-align: left; width: 100%;">
+                        <strong>Figure 6:</strong> Image reconstruction results.
+                    </figcaption>
+                </figure>
+            </d-figure>
+
+            <h1 class="text">Image Editing</h1>
+            <p class="text">
+                We demonstrate that MetaQuery can transfer its image reconstruction capability to perform image editing. We keep the MLLM backbone frozen and fine-tune our pre-trained Base model for only 1,000 steps on publicly available image editing data. Qualitative results demonstrate that our model performs effectively in these image-editing scenarios.
+            </p>
+
+            <d-figure>
+                <figure style="text-align: center;">
+                    <img data-zoomable="" draggable="false" src="static/img/edit.png" alt="Image Editing">
+                    <figcaption style="text-align: left; width: 100%;">
+                        <strong>Figure 7:</strong> Image editing results.
+                    </figcaption>
+                </figure>
+            </d-figure>
+
+            <h1 class="text">Instruction Tuning</h1>
+            <p class="text">
+                We show that after being instruction-tuned on the proposed 2.4M dataset, MetaQuery can achieve impressive zero-shot subject-driven generation performance, producing coherent results even with multiple highly customized subjects (the first row of Figure 8). Using various supervision signals, the instruction-tuned MetaQuery model surprisingly unlocks novel capabilities like visual association and logo design that go beyond copy-pasting (the second row of Figure 8).
+            </p>
+
+            <d-figure>
+                <figure style="text-align: center;">
+                    <img data-zoomable="" draggable="false" src="static/img/subjectdriven.png" alt="Instruction Tuning" style="width: 80%;">
+                    <figcaption style="text-align: left; width: 100%;">
+                        <strong>Figure 8:</strong> Qualitative results for instruction tuning. Instruction-tuned MetaQuery achieves strong subject-driven capability (first row) and can even reason through the multimodal input to generate images (second row).
+                    </figcaption>
+                </figure>
+            </d-figure>            
+        </div>
+
+        <h1 class="text">Reasoning- and Knowledge-Augmented Generation</h1>
+        <p class="text">
+            Our learnable queries effectively leverage the frozen LLM's capabilities, enabling better understanding of complex prompts requiring real-world knowledge and reasoning.
+        </p>
+
+        <d-figure>
+            <figure style="text-align: center;">
+                <img data-zoomable="" draggable="false" src="static/img/commonsense.png" alt="Reasoning and Knowledge-Augmented Generation">
+                <figcaption style="text-align: left; width: 100%;">
+                    <strong>Figure 9:</strong> MetaQuery leverages frozen MLLMs for reasoning- and knowledge-augmented generation. <sup>*</sup> denotes that the LLM last layer embeddings of input tokens are used for image generation. This approach can be better than the base Sana model in some cases but fails to activate in-context learning to perform knowledge-augmented generation.
+                </figcaption>
+            </figure>
+        </d-figure>
+
+        <p class="text">
+            We evaluate MetaQuery's world knowledge reasoning capability on the WISE benchmark, which contains similar test cases to the knowledge-augmented generation examples shown in Figure 9. MetaQuery achieves SOTA performance, significantly outperforming all other unified models. Our work stands as the first unified model to successfully transfer the advanced capabilities of frozen MLLMs to image generation and exceed the performance of SOTA text-to-image models.
+        </p>
+        
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;"><strong>Methods</strong></th>
+                            <th><strong>Cultural</strong></th>
+                            <th><strong>Time</strong></th>
+                            <th><strong>Space</strong></th>
+                            <th><strong>Biology</strong></th>
+                            <th><strong>Physics</strong></th>
+                            <th><strong>Chemistry</strong></th>
+                            <th><strong>Overall</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background-color: rgba(0, 128, 0, 0.25);">
+                            <td style="text-align: left;">GPT-4o</td>
+                            <td>0.94</td>
+                            <td>0.64</td>
+                            <td>0.98</td>
+                            <td>0.93</td>
+                            <td>0.98</td>
+                            <td>0.95</td>
+                            <td>0.89</td>
+                        </tr>
+                        <tr>
+                            <td colspan="8" style="text-align: center; font-style: italic;">Text-to-Image Models</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">SD-v1-5</td>
+                            <td>0.34</td>
+                            <td>0.35</td>
+                            <td>0.32</td>
+                            <td>0.28</td>
+                            <td>0.29</td>
+                            <td>0.21</td>
+                            <td>0.32</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">SD-XL</td>
+                            <td>0.43</td>
+                            <td>0.48</td>
+                            <td>0.47</td>
+                            <td>0.44</td>
+                            <td>0.45</td>
+                            <td>0.27</td>
+                            <td>0.43</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">PixArt-Alpha</td>
+                            <td>0.45</td>
+                            <td>0.50</td>
+                            <td>0.48</td>
+                            <td>0.49</td>
+                            <td>0.56</td>
+                            <td>0.34</td>
+                            <td>0.47</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">playground-v2.5</td>
+                            <td>0.49</td>
+                            <td class="highlight">0.58</td>
+                            <td>0.55</td>
+                            <td>0.43</td>
+                            <td>0.48</td>
+                            <td>0.33</td>
+                            <td>0.49</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">SD-3.5-large</td>
+                            <td>0.44</td>
+                            <td>0.50</td>
+                            <td>0.58</td>
+                            <td>0.44</td>
+                            <td>0.52</td>
+                            <td>0.31</td>
+                            <td>0.46</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">FLUX.1-dev</td>
+                            <td>0.48</td>
+                            <td class="highlight">0.58</td>
+                            <td class="highlight">0.62</td>
+                            <td>0.42</td>
+                            <td>0.51</td>
+                            <td>0.35</td>
+                            <td>0.50</td>
+                        </tr>
+                        <tr>
+                            <td colspan="8" style="text-align: center; font-style: italic;">Unified Models</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">show-o-512</td>
+                            <td>0.28</td>
+                            <td>0.40</td>
+                            <td>0.48</td>
+                            <td>0.30</td>
+                            <td>0.46</td>
+                            <td>0.30</td>
+                            <td>0.35</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">vila-u-7b-256</td>
+                            <td>0.26</td>
+                            <td>0.33</td>
+                            <td>0.37</td>
+                            <td>0.35</td>
+                            <td>0.39</td>
+                            <td>0.23</td>
+                            <td>0.31</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">Emu3</td>
+                            <td>0.34</td>
+                            <td>0.45</td>
+                            <td>0.48</td>
+                            <td>0.41</td>
+                            <td>0.45</td>
+                            <td>0.27</td>
+                            <td>0.39</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">Janus-1.3B</td>
+                            <td>0.16</td>
+                            <td>0.26</td>
+                            <td>0.35</td>
+                            <td>0.28</td>
+                            <td>0.30</td>
+                            <td>0.14</td>
+                            <td>0.23</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">JanusFlow-1.3B</td>
+                            <td>0.13</td>
+                            <td>0.26</td>
+                            <td>0.28</td>
+                            <td>0.20</td>
+                            <td>0.19</td>
+                            <td>0.11</td>
+                            <td>0.18</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">Janus-Pro-1B</td>
+                            <td>0.20</td>
+                            <td>0.28</td>
+                            <td>0.45</td>
+                            <td>0.24</td>
+                            <td>0.32</td>
+                            <td>0.16</td>
+                            <td>0.26</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">Janus-Pro-7B</td>
+                            <td>0.30</td>
+                            <td>0.37</td>
+                            <td>0.49</td>
+                            <td>0.36</td>
+                            <td>0.42</td>
+                            <td>0.26</td>
+                            <td>0.35</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">MetaQuery-B</td>
+                            <td>0.44</td>
+                            <td>0.49</td>
+                            <td>0.58</td>
+                            <td>0.41</td>
+                            <td>0.49</td>
+                            <td>0.34</td>
+                            <td>0.46</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">MetaQuery-L</td>
+                            <td class="highlight">0.56</td>
+                            <td>0.57</td>
+                            <td class="highlight">0.62</td>
+                            <td>0.48</td>
+                            <td class="highlight">0.63</td>
+                            <td class="highlight">0.42</td>
+                            <td class="highlight">0.55</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">MetaQuery-XL</td>
+                            <td class="highlight">0.56</td>
+                            <td>0.55</td>
+                            <td class="highlight">0.62</td>
+                            <td class="highlight">0.49</td>
+                            <td class="highlight">0.63</td>
+                            <td>0.41</td>
+                            <td class="highlight">0.55</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <figure style="text-align: center;">
+            <figcaption style="text-align: left; width: 100%;">
+                <strong>Table 5:</strong> Comparison of world knowledge reasoning on WISE.
+            </figcaption>
+        </figure>
+
+        <p class="text">
+            We also quantitatively evaluate MetaQuery's commonsense reasoning capability on the CommonsenseT2I benchmark. Results show that MetaQuery significantly improves the performance of the base Sana model, achieving SOTA performance.
+        </p>
+
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;"><strong>Methods</strong></th>
+                            <th><strong>w/o Neg. Prompt</strong></th>
+                            <th><strong>w/ Neg. Prompt</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background-color: rgba(0, 128, 0, 0.1);">
+                            <td style="text-align: left;">DALL-E 3 w/ rewrite</td>
+                            <td>40.17</td>
+                            <td>N/A</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">SD-XL</td>
+                            <td>26.00</td>
+                            <td>44.83</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">SD-3-medium</td>
+                            <td>26.17</td>
+                            <td>47.17</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">FLUX.1-dev</td>
+                            <td>24.50</td>
+                            <td>22.50</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">Sana-1.6B</td>
+                            <td>25.17</td>
+                            <td>43.33</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">MetaQuery-B</td>
+                            <td>27.33</td>
+                            <td>51.50</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left;">MetaQuery-L</td>
+                            <td>28.83</td>
+                            <td class="highlight">57.67</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <figure style="text-align: center;">
+            <figcaption style="text-align: left; width: 100%;">
+                <strong>Table 6:</strong> Comparison of visual commonsense reasoning capability on CommonsenseT2I.
+            </figcaption>
+        </figure>
+
+        <h1 class="text">Discussion</h1>
+        <p class="text">
+            While our learnable queries approach matches the image quality of using LLM's last layer embeddings, the latter treats the LLM merely as a text encoder, limiting in-context learning. As shown in Figure 9 and confirmed by WiScore and CommonsenseT2I benchmarks, MetaQuery significantly outperforms the last layer embedding approach by natively integrating with the LLM to leverage its reasoning capabilities for generating appropriate images.
+        </p>
+
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th><strong>Methods</strong></th>
+                            <th><strong>MJHQ-30K FID ↓</strong></th>
+                            <th><strong>GenEval ↑</strong></th>
+                            <th><strong>DPG-Bench ↑</strong></th>
+                            <th><strong>WiScore ↑</strong></th>
+                            <th><strong>CommonsenseT2I ↑</strong></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Ours-L w/ Last Layer Embed<sup>*</sup></td>
+                            <td>6.41</td>
+                            <td class="highlight">0.78</td>
+                            <td class="highlight">81.23</td>
+                            <td>0.48</td>
+                            <td>52.83</td>
+                        </tr>
+                        <tr>
+                            <td>Ours-L w/ MetaQuery</td>
+                            <td class="highlight">6.35</td>
+                            <td class="highlight">0.78</td>
+                            <td>81.10</td>
+                            <td class="highlight">0.55</td>
+                            <td class="highlight">57.67</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <figure style="text-align: center;">
+            <figcaption style="text-align: left; width: 100%;">
+                <strong>Table 7:</strong> Comparison between MetaQuery and LLM last layer embedding. <sup>*</sup> denotes that the LLM last layer embeddings of input tokens are used for image generation.
+            </figcaption>
+        </figure>
+
+        <div id="conclusion" style="position: relative; margin-top: 40px; margin-bottom: 0px;">
+            <h2 class="text" style="margin-top:0px; margin-bottom:10px">Conclusion</h2>
+            <p class="text">
+                We presented MetaQueries, a simple interface connecting MLLMs (for understanding) and diffusion decoders (for generation), effective even when the MLLM is frozen. This approach yields state-of-the-art understanding and generation performance with straightforward implementation. By enabling transfer between modalities, MetaQueries successfully channels MLLM knowledge and reasoning into multimodal generation. While effective, we hypothesize that bridging the remaining gap to leading proprietary systems may primarily involve further data scaling. We hope MetaQueries provides a powerful, accessible baseline for future unified multimodal model development.
+            </p>
+        </div>
+
+        </d-article>
+        <d-appendix>
+            <h3>BibTeX</h3>
+            <p class="bibtex">
+                @article{pan2025transfer,<br>
+                &nbsp;&nbsp;title={{Transfer between Modalities with MetaQueries
+                }},<br>
+                &nbsp;&nbsp;author={Pan, Xichen and Shukla, Satya Narayan and Singh, Aashu and Zhao, Zhuokai and Mishra, Shlok Kumar and Wang, Jialiang and Xu, Zhiyang and Chen, Jiuhai and Li, Kunpeng and Juefei-Xu, Felix and Hou, Ji and Xie, Saining},<br>
+                &nbsp;&nbsp;journal={arXiv preprint arXiv:2504.xxxxx},<br>
+                &nbsp;&nbsp;year={2025}<br>
+                }
+            </p>
+
+            <d-footnote-list></d-footnote-list>
+            <d-citation-list></d-citation-list>
+        </d-appendix>
+        <!-- bibliography will be inlined during Distill pipeline's pre-rendering -->
+        <d-bibliography src="bibliography.bib"></d-bibliography>
+        <script src="./static/js/nav-bar.js"></script>
+    </body>
 </html>
