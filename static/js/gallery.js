@@ -50,21 +50,40 @@ function initImageComparisons() {
         const slider = comparison.querySelector('.slider');
         const originalImage = comparison.querySelector('.original-image');
         let isDragging = false;
+        let startX = 0;
+        let sliderLeft = 0;
 
         // Set initial position to 50%
         slider.style.left = '50%';
         originalImage.style.clipPath = 'polygon(0 0, 50% 0, 50% 100%, 0 100%)';
 
+        // Mouse events
         slider.addEventListener('mousedown', startDragging);
         document.addEventListener('mouseup', stopDragging);
         document.addEventListener('mousemove', drag);
 
+        // Touch events
+        slider.addEventListener('touchstart', handleTouchStart);
+        document.addEventListener('touchend', handleTouchEnd);
+        document.addEventListener('touchmove', handleTouchMove);
+
         function startDragging(e) {
             isDragging = true;
+            startX = e.clientX - slider.offsetLeft;
+            e.preventDefault();
+        }
+
+        function handleTouchStart(e) {
+            isDragging = true;
+            startX = e.touches[0].clientX - slider.offsetLeft;
             e.preventDefault();
         }
 
         function stopDragging() {
+            isDragging = false;
+        }
+
+        function handleTouchEnd() {
             isDragging = false;
         }
 
@@ -73,8 +92,21 @@ function initImageComparisons() {
             
             const rect = comparison.getBoundingClientRect();
             const x = Math.max(0, Math.min(e.clientX - rect.left, rect.width));
-            const percentage = (x / rect.width) * 100;
+            updateSliderPosition(x, rect.width);
+        }
+
+        function handleTouchMove(e) {
+            if (!isDragging) return;
             
+            const rect = comparison.getBoundingClientRect();
+            const touch = e.touches[0];
+            const x = Math.max(0, Math.min(touch.clientX - rect.left, rect.width));
+            updateSliderPosition(x, rect.width);
+            e.preventDefault();
+        }
+
+        function updateSliderPosition(x, width) {
+            const percentage = (x / width) * 100;
             slider.style.left = `${percentage}%`;
             originalImage.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
         }
