@@ -45,6 +45,7 @@
         <script defer src="./static/js/zoom.js"></script>
         <script defer src="./static/js/gallery.js"></script>
     </head>
+
     <body>
         <div class="header-wrapper">
             <div class="header-container" id="header-container">
@@ -154,22 +155,29 @@
                 <h2 class="text">2. Self-Judgment Design</h2>
                 <p class="text">
                     Our judgment design uses a multi-level scoring mechanism to achieve a fine-grained evaluation. We strictly define the scoring range from -1.0 to 1.0 to constrain bias. The system provides two types of feedback:
-                    <ul>
+                </p>
+                <ul>
                         <li><strong>Global Reward \(\alpha\)</strong>: A single scalar score that assesses the overall compositional quality and layout of the entire image. </li>
                         <li><strong>Local Reward \(\mathcal{R}\)</strong>: A dense reward map where each region is scored based on its alignment with specific keywords from the prompt, avoiding interference from irrelevant backgrounds. </li>
-                    </ul>
+                </ul>
+                <p class="text">
                     This dual-reward system allows the model to refine both the macro-structure and the micro-details of the generated image. 
                 </p>
             </div>
 
             <div id="sec:objective" class="sub-section">
                 <h2 class="text">3. Weighted Post-Training Objective</h2>
+
                 <p class="text">
-                    The final training objective \(\mathcal{L}_{~~\text{Total}}\)is a composite loss designed to incorporate the reward feedback while preserving the image's structural integrity. It consists of two main components:
-                    <ol>
-                        <li>A <strong>reward-driven term (\(\mathcal{L}_{~\text{r}}\))</strong> that uses the global (\(\alpha\)) and local (\(\mathcal{R}\)) rewards to modulate the learning process, encouraging desired changes (preservation) or penalizing flaws (repulsion). </li>
-                        <li>A <strong>ground-truth constraint term (\(\mathcal{L}_{~\text{ref}}\))</strong> that acts as a regularizer, preventing the model from making drastic changes that distort the overall image structure. </li>
-                    </ol>
+                    The final training objective \(\mathcal{L}_{~~\text{Total}}\) is a composite loss designed to incorporate the reward feedback while preserving the image's structural integrity. It consists of two main components:
+                </p>
+
+                <ol>
+                    <li>A <strong>reward-driven term (\(\mathcal{L}_{~\text{r}}\))</strong> that uses the global (\(\alpha\)) and local (\(\mathcal{R}\)) rewards to modulate the learning process, encouraging desired changes (preservation) or penalizing flaws (repulsion). </li>
+                    <li>A <strong>ground-truth constraint term (\(\mathcal{L}_{~\text{ref}}\))</strong> that acts as a regularizer, preventing the model from making drastic changes that distort the overall image structure. </li>
+                </ol>
+
+                <p class="text">
                     The combined loss is formulated as: \(\mathcal{L}_{~~\text{Total}} = \mathcal{L}_{~\text{r}} + \lambda_{~\text{c}} \cdot \mathcal{L}_{~\text{ref}}\)
                 </p>
         </div>
@@ -376,13 +384,6 @@
 
         </div>
 
-        <div id="conclusion" style="position: relative; margin-top: 40px; margin-bottom: 0px;">
-            <h2 class="text" style="margin-top:0px; margin-bottom:10px">Conclusion</h2>
-            <p class="text">
-                SRUM is a self-rewarding framework that enhances compositional reasoning in unified models. It moves beyond costly external judges by leveraging a model's inherent understanding-generation duality. The model's comprehension module provides fine-grained, internal reward signals to its generative counterpart, creating an efficient optimization loop. Rewards are decomposed into global composition and local attribute fidelity for multi-scale alignment. Experiments on T2I-CompBench and T2I-ReasonBench show significant performance gains and strong generalization, validating the framework's effectiveness and potential for future multimodal applications.
-            </p>
-        </div>
-
         <div id="discussion" style="position: relative; margin-top: 40px; margin-bottom: 0px;">
             <h2 class="text" style="margin-top:0px; margin-bottom:10px">Discussion</h2>
             <p class="text">
@@ -390,21 +391,30 @@
             </p>
         </div>
 
-    </d-article>
-    <d-appendix>
-    <h3>BibTeX</h3>
+        <div id="conclusion" style="position: relative; margin-top: 40px; margin-bottom: 0px;">
+            <h2 class="text" style="margin-top:0px; margin-bottom:10px">Conclusion</h2>
+            <p class="text">
+                SRUM is a self-rewarding framework that enhances compositional reasoning in unified models. It moves beyond costly external judges by leveraging a model's inherent understanding-generation duality. The model's comprehension module provides fine-grained, internal reward signals to its generative counterpart, creating an efficient optimization loop. Rewards are decomposed into global composition and local attribute fidelity for multi-scale alignment. Experiments on T2I-CompBench and T2I-ReasonBench show significant performance gains and strong generalization, validating the framework's effectiveness and potential for future multimodal applications.
+            </p>
+        </div>
+
+        </d-article>
+        <d-appendix>
+        <h3>BibTeX</h3>
         <p class="bibtex">
             @article{jin2025srum,<br>
-            title={SRUM: Fine-Grained Self-Rewarding for Unified Models},<br>
-            author={Jin, Weiyang and Niu, Yuwei and Liao, Jiaqi and Duan, Chengqi and Liu, Xihui},<br>
-            journal={arXiv preprint arXiv:your_arxiv_id},<br>
-            year={2025}<br>
+            &nbsp;&nbsp;title={SRUM: Fine-Grained Self-Rewarding for Unified Models},<br>
+            &nbsp;&nbsp;author={Jin, Weiyang and Niu, Yuwei and Liao, Jiaqi and Duan, Chengqi and Liu, Xihui},<br>
+            &nbsp;&nbsp;journal={arXiv preprint arXiv:your_arxiv_id},<br>
+            &nbsp;&nbsp;year={2025}<br>
             }
         </p>
 
         <d-footnote-list></d-footnote-list>
         <d-citation-list></d-citation-list>
     </d-appendix>
+
+
     <d-bibliography src="bibliography.bib"></d-bibliography>
     <script src="./static/js/nav-bar.js"></script>
 
