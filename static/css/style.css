@@ -1720,7 +1720,7 @@ iframe {
 
 d-appendix {
   display: block;
-  width: 150%; /* 1. 宽度设置为200% */
+  width: 125%; /* 1. 宽度设置为200% */
   position: relative; /* 2. 设置相对定位，以便 transform 生效 */
   left: 50%; /* 3. 先向右移动50%（父容器的50%） */
   transform: translateX(-25%); /* 4. 再向左移动自身宽度的50%，实现完美居中 */
