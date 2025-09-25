@@ -1729,3 +1729,11 @@ d-appendix {
   background-color: #fafafa; /* 灰色背景已经存在 */
   box-sizing: border-box; /* 建议添加，避免 padding 和 border 影响最终宽度 */
 }
+
+.gain-row {
+    background-color: rgba(212, 237, 218, 0.4); /* A light green color */
+}
+.gain-cell {
+    background-color: #d4edda; 
+    color: #155724;
+}

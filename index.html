@@ -1,7 +1,21 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <title>SRUM: Fine-Grained Self-Rewarding for Unified Models</title>
+        <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({ TeX: { equationNumbers: { autoNumber: "all" } } });
+        </script>
+
+        <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {
+                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                processEscapes: true
+            }
+            });
+        </script>
+
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript">
+        </script>
+        <title>SRUM: Fine-Grained Self-Rewarding for Unified Multimodal Models</title>
         <link rel="icon" type="image/x-icon" href="/static/img/icons/icon.png">
 
         <meta charset="utf-8">
@@ -9,14 +23,14 @@
 
         <meta property="og:url" content="https://your-project-page-url.com/srum/" />
         <meta property="og:image" content="https://your-project-page-url.com/srum/static/img/preview.png" />
-        <meta property="og:title" content="SRUM: Fine-Grained Self-Rewarding for Unified Models" />
-        <meta property="og:description" content="Introducing SRUM, a self-rewarding framework that enables Unified Models to iteratively improve their generative capabilities by leveraging their own understanding." />
+        <meta property="og:title" content="SRUM: Fine-Grained Self-Rewarding for Unified Multimodal Models" />
+        <meta property="og:description" content="Introducing SRUM, a self-rewarding framework that enables Unified Multimodal Models to iteratively improve their generative capabilities by leveraging their own understanding." />
 
         <meta name="twitter:url" content="https://your-project-page-url.com/srum/" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:image" content="https://your-project-page-url.com/srum/static/img/preview.png" />
-        <meta name="twitter:title" content="SRUM: Fine-Grained Self-Rewarding for Unified Models" />
-        <meta name="twitter:description" content="Introducing SRUM, a self-rewarding framework that enables Unified Models to iteratively improve their generative capabilities by leveraging their own understanding." />
+        <meta name="twitter:title" content="SRUM: Fine-Grained Self-Rewarding for Unified Multimodal Models" />
+        <meta name="twitter:description" content="Introducing SRUM, a self-rewarding framework that enables Unified Multimodal Models to iteratively improve their generative capabilities by leveraging their own understanding." />
 
         <script src="./static/js/distill_template.v2.js"></script>
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -44,15 +58,144 @@
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>  <script defer src="./static/js/medium-zoom.min.js"></script>
         <script defer src="./static/js/zoom.js"></script>
         <script defer src="./static/js/gallery.js"></script>
-    </head>
+
+        <style>
+            .teaser-gallery h2 {
+                max-width: none;      /* 新增：移除继承的宽度限制，让标题框撑满容器 */
+                text-align: center;   /* 保留：让文字在撑满的框内居中 */
+            }
+
+            /* 将每个 Teaser 卡片下方的分类和Prompt文字居中 */
+            .teaser-slider-item {
+                text-align: center;
+            }
+            /* 让 Teaser Gallery 宽度撑满屏幕并添加自定义边距 */
+            .teaser-gallery {
+                width: 100vw; /* 宽度设为100%视窗宽度 */
+                position: relative;
+                left: 50%;
+                transform: translateX(-50%);
+                box-sizing: border-box; /* 关键属性，防止出现滚动条 */
+                padding-top: 40px; /* 增加一些上下内边距 */
+                padding-bottom: 40px;
+                padding-left: 5vw;  /* 设置左右边距，5vw约等于5%的屏幕宽度 */
+                padding-right: 5vw;
+            }
+            .teaser-sliders-container {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+                margin-top: 20px;
+            }
+            .teaser-slider-item {
+                flex: 1;
+                min-width: 350px;
+                max-width: 450px;
+            }
+            .bibtex {
+                /* --- 核心：宽度与居中 --- */
+                max-width: 800px;      /* 1. 设置最大宽度，使其与正文宽度类似 (可按需调整) */
+                margin-left: auto;     /* 2. 自动外边距实现水平居中 */
+                margin-right: auto;    /* 3. 自动外边距实现水平居中 */
+
+                /* --- 可选：美化样式 --- */
+                padding: 20px;         /* 增加内边距，让内容有呼吸空间 */
+                background-color: #f8f9fa; /* 添加浅灰色背景，使其看起来像一个代码块 */
+                border-radius: 5px;    /* 添加圆角 */
+                border: 1px solid #dee2e6; /* 添加一个细边框 */
+
+                /* --- 保留：内部文字换行设置 --- */
+                white-space: pre-wrap;   /* 允许长文本自动换行，同时保留缩进 */
+                word-break: break-word;    /* 允许在长单词内部断开 */
+                line-height: 1.6;        /* 增加行高，让引用更易读 */
+            }
+            .comparison-slider {
+                position: relative;
+                width: 100%;
+                aspect-ratio: 1 / 1;
+                overflow: hidden;
+                border-radius: 8px;
+                cursor: col-resize;
+                border: 1px solid #ddd;
+            }
+            .comparison-slider img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                pointer-events: none;
+            }
+            .comparison-slider .after-image {
+                clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+            }
+            .slider-handle {
+                position: absolute;
+                top: 0;
+                left: 50%;
+                width: 4px;
+                height: 100%;
+                background-color: rgba(255, 255, 255, 0.8);
+                transform: translateX(-50%);
+                pointer-events: none;
+            }
+            .slider-handle::after {
+                content: '↔';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background-color: rgba(255, 255, 255, 0.8);
+                color: #333;
+                border-radius: 50%;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                box-shadow: 0 0 5px rgba(0,0,0,0.3);
+            }
+            .slider-category {
+                font-weight: bold;
+                margin-top: 15px;
+                font-size: 1.1em;
+            }
+            .slider-prompt {
+                font-style: italic;
+                color: #555;
+                margin-top: 5px;
+                min-height: 40px;
+            }
+             /* Responsive layout for smaller screens */
+            @media (max-width: 680px) {
+                .teaser-sliders-container {
+                    flex-direction: column;
+                    align-items: center;
+                }
+            }
+        /* 移除作者姓名区域 (byline) 的上下边框 */
+        .byline {
+            border: none !important;
+            margin-top: 20px; /* (可选) 移除边框后，可以稍微增加一点上边距来调整间距 */
+        }
+
+        /* 移除 Teaser 标题 (h2) 的下划线 */
+        .teaser-gallery h2.text {
+            border-bottom: none !important;
+        }
+        </style>
+        </head>
 
     <body>
         <div class="header-wrapper">
             <div class="header-container" id="header-container">
                 <div class="header-content">
-                    <h1 style="margin-top: 0px"><i>SRUM: Fine-Grained Self-Rewarding for Unified Models</i></h1>
+                    <h1 style="margin-top: 0px"><i>SRUM: Fine-Grained Self-Rewarding for Unified Multimodal Models</i></h1>
                         <p>
-                           Introducing <strong>SRUM</strong> (<strong>S</strong>elf-<strong>R</strong>ewarding for <strong>U</strong>nified <strong>M</strong>odels), a post-training framework that creates a cost-effective, self-iterative optimization loop. SRUM compels a model's understanding component to enhance its generative component for better compositional reasoning and alignment.
+                            Introducing <strong>SRUM</strong> (<strong>S</strong>elf-<strong>R</strong>ewarding for <strong>U</strong>nified Multimodal <strong>M</strong>odels), a post-training framework that creates a cost-effective, self-iterative optimization loop. SRUM compels a model's understanding component to enhance its generative component for better compositional reasoning and alignment.
                         </p>
 
                         <div class="icon-container">
@@ -62,7 +205,7 @@
                             </div>
                             <div class="icon-item">
                                 <img src="./static/img/icons/fine-grained.svg" alt="Fine-Grained Icon">
-                                <div><strong>Fine-Grained Feedback</strong>: Our internal reward is decomposed into a </strong>global reward</strong> for overall compositional correctness and a </strong>local reward</strong> for attribute fidelity, enabling multi-scale refinement.</div>
+                                <div><strong>Fine-Grained Feedback</strong>: Our internal reward is decomposed into a <strong>global reward</strong> for overall compositional correctness and a <strong>local reward</strong> for attribute fidelity, enabling multi-scale refinement.</div>
                             </div>
                             <div class="icon-item">
                                 <img src="./static/img/icons/sota.svg" alt="SOTA Icon">
@@ -96,289 +239,312 @@
                 </div>
             </div>
         </div>
-    <d-article>
+
+        <d-article>
         <div class="byline">
             <div class="byline-container">
                 <p>
-                    <a href="https://github.com/WayneJin0918" class="author-link" target="_blank">Weiyang Jin<sup>*1,&dagger;</sup></a> &emsp;
-                    <a href="https://purshow.github.io/" class="author-link" target="_blank">Purshow Niu<sup>*1</sup></a> &emsp;
-                    <a href="" class="author-link" target="_blank">Curry Liao<sup>1</sup></a> &emsp;
-                    <a href="https://scholar.google.com/citations?user=r9qb4ZwAAAAJ&hl=en" class="author-link" target="_blank">Chengqi Duan<sup>1</sup></a> &emsp;
-                    <a href="https://xh-liu.github.io/" class="author-link" target="_blank">Xihui Liu<sup>1,&sect;</sup></a>
-                    <p></p>
+                    <a href="https://github.com/WayneJin0918" class="author-link" target="_blank">Weiyang Jin<sup>*1,2,&dagger;</sup></a> &emsp;
+                    <a href="https://purshow.github.io/" class="author-link" target="_blank">Yuwei Niu<sup>*2</sup></a> &emsp;
+                    <a href="" class="author-link" target="_blank">Jiaqi Liao<sup>2</sup></a> &emsp;
+                    <a href="https://scholar.google.com/citations?user=r9qb4ZwAAAAJ&hl=en" class="author-link" target="_blank">Chengqi Duan<sup>1,2</sup></a> &emsp;
+                    <a href="" class="author-link" target="_blank">Aoxue Li<sup>3</sup></a> &emsp;
+                    <a href="https://scholar.google.com/citations?user=fe-1v0MAAAAJ&hl=en" class="author-link" target="_blank">Shenghua Gao<sup>2</sup></a> &emsp;
+                    <a href="https://xh-liu.github.io/" class="author-link" target="_blank">Xihui Liu<sup>1,2,&sect;</sup></a>
                 </p>
                 <p style="text-align: center;">
                     <a href="https://mmlab.hk/" class="affiliation-link" target="_blank"><sup>1</sup>HKU MMLab</a>
+                    <a href="https://www.hku.hk/" class="affiliation-link" target="_blank"><sup>1</sup>The University of Hong Kong</a>
+                    <a href="http://dev3.noahlab.com.hk/collaborations.html" class="affiliation-link" target="_blank"><sup>1</sup>Noah's Ark Lab, Huawei</a>
                 </p>
                 <p style="text-align: center; margin-bottom: 0;">
                     <span class="author-note"><sup>*</sup>Equal contribution, <sup>&dagger;</sup>Project lead, <sup>&sect;</sup>Corresponding Author</span>
                 </p>
             </div>
         </div>
+        <hr>
+        <div class="teaser-gallery vision-block">
+            <div class="teaser-sliders-container">
+                <div class="teaser-slider-item">
+                    <div class="comparison-slider">
+                        <img src="static/img/1_1.png" alt="Before SRUM - Modern Christmas Dinner" class="before-image">
+                        <img src="static/img/1_2.png" alt="After SRUM - Nativity Scene" class="after-image">
+                        <div class="slider-handle"></div>
+                    </div>
+                    <p class="slider-category">Commonsense Knowledge</p>
+                    <p class="slider-prompt">"Holiday celebrating the birth of Jesus Christ"</p>
+                </div>
+                <div class="teaser-slider-item">
+                    <div class="comparison-slider">
+                        <img src="static/img/2-1.jpg" alt="Before SRUM - Literal interpretation with cake" class="before-image">
+                        <img src="static/img/2-2.jpg" alt="After SRUM - Idiomatic interpretation of happiness" class="after-image">
+                        <div class="slider-handle"></div>
+                    </div>
+                    <p class="slider-category">Reasoning-informed Generation</p>
+                    <p class="slider-prompt">"The final exam was a piece of cake"</p>
+                </div>
+                <div class="teaser-slider-item">
+                    <div class="comparison-slider">
+                        <img src="static/img/3-1.png" alt="Before SRUM - Incorrect number of books (10)" class="before-image">
+                        <img src="static/img/3-2.png" alt="After SRUM - Correct number of books (7)" class="after-image">
+                        <div class="slider-handle"></div>
+                    </div>
+                    <p class="slider-category">Compositional Generation</p>
+                    <p class="slider-prompt">"Generate image of seven books"</p>
+                </div>
+            </div>
+        </div>
+        <hr>
+
         <p class="text abstract">
-            Unified Models (UMs), which integrate generative and understanding capabilities, face a key bottleneck: the disjointed training of their modules often leads to gradient conflicts and suboptimal performance. Standard Text-to-Image (T2I) models also struggle to interpret prompts requiring complex spatial relationships and compositional reasoning. 
-            <br><br>
-            To address this, we introduce <strong>SRUM</strong>, a self-rewarding post-training framework. The core idea is to leverage the UM's inherent duality: the understanding module evaluates and provides fine-grained reward signals to guide its own generative module. This creates a self-contained optimization loop that enhances the model's ability to handle complex prompts without relying on external judges. 
+            To address the challenge of Unified Multimodal Models (UMMs) failing to generate complex images that match their powerful understanding, we introduce <b>SRUM</b>, a self-rewarding framework. It creates a self-improvement loop where the model's own understanding module acts as an internal "teacher," providing corrective rewards to its generation module without needing new human-labeled data. The core innovation is a two-part reward system focusing on both global composition and local object-level details. This method establishes a new state of the art, significantly boosting image accuracy on key benchmarks like T2I-CompBench (from 82.18 to <b>88.37</b>) and T2I-ResonBench (from 40.7 to <b>50.4</b>).
 
             This page is structured around three key components:
             <ol class="text">
                 <li><strong><a href="#Methodology">&sect;Methodology</a></strong>: We detail the SRUM framework, including the rewarding process, the fine-grained judgment design (global and local rewards), and the weighted training objective.</li>
-                <li><strong><a href="#Results">&sect;Results</a></strong>: We showcase how SRUM significantly boosts performance on challenging compositional benchmarks like T2I-CompBench and demonstrate its strong generalization capabilities.</li>
-                <li><strong><a href="#Analysis">&sect;Analysis and Insights</a></strong>: We provide an empirical analysis of SRUM's components, revealing how different reward designs impact the model's inference process at various stages.</li>
+                <li><strong><a href="#Experiments">&sect;Results</a></strong>: We showcase how SRUM significantly boosts performance on challenging compositional benchmarks like T2I-CompBench and demonstrate its strong generalization capabilities.</li>
+                <li><strong><a href="#Experiments">&sect;Analysis and Insights</a></strong>: We provide an empirical analysis of SRUM's components, revealing how different reward designs impact the model's inference process at various stages.</li>
             </ol>
         </p>
-
         <hr>
 
         <div id='Methodology' class="vision-block">
-            <h1 class="text">How SRUM Works: A Three-Step Process</h1>
-                <p class="text">
-                    SRUM operates through a systematic, self-contained pipeline. The model first generates images, then critically evaluates its own output to create fine-grained rewards, and finally uses those rewards to refine itself via a weighted training objective. 
-                </p>
-                <d-figure>
-                    <figure>
-                        <img data-zoomable="" draggable="false" src="static/img/srum_ppl.png" alt="SRUM Pipeline">
-                        <figcaption style="text-align: left;">
-                            <strong>Figure 1:</strong> The pipeline of the SRUM framework. The process includes reward generation, the design of regional and global rewards, and their application during the post-training phase to refine the generative model. 
-                        </figcaption>
-                    </figure>
-                </d-figure>
+            <h1 class="text">How SRUM Works: A Step-by-Step Pipeline</h1>
+            <d-figure>
+                <figure>
+                    <img data-zoomable="" draggable="false" src="static/img/srum_ppl.png" alt="SRUM Pipeline">
+                    <figcaption style="text-align: left;">
+                        <strong>Figure 1:</strong> The SRUM pipeline, including reward generation, the design of fine-grained rewards, and their application during the reward-weighted training phase.
+                    </figcaption>
+                </figure>
+            </d-figure>
+            <p class="text">
+                This section details the SRUM pipeline. Our process begins with generating high-quality image candidates using a Unified Multimodal Model (UMM). These candidates are then meticulously evaluated by a dual-level system that assesses both local fidelity and global composition. The resulting scores are transformed into a dense, spatially-aware reward map, which is integrated into a novel reward-weighted training objective. This allows for targeted, region-specific model refinement while preventing "reward hacking."
+            </p>
 
-            <div id="sec:rewarding" class="sub-section">
-                <h2 class="text">1. Rewarding Process</h2>
+            <div id="sec:data_gen" class="sub-section">
+                <h2 class="text">1. Image & Bounding Box Generation</h2>
                 <p class="text">
-                    The rewarding process begins with the UM generating candidate images from text prompts. We then leverage the model's inherent grounding capabilities to score specific image regions (both objects and background) that are semantically relevant to the prompt. Once all region-specific scores are obtained, they are aggregated into a rewards map, which is aligned with the generator's latent space via interpolation for seamless integration into the training pipeline. 
+                    As shown in the figure, our pipeline begins by using a UMM to synthesize candidate images from input prompts, leveraging a "think" mode (Chain-of-Thought) for high-fidelity outputs. We then produce bounding box proposals for each image. To enable precise grounding for the reward modeling, the UMM's understanding module filters these proposals, retaining only those that are semantically aligned with the initial prompt.
                 </p>
             </div>
             
-            <div id="sec:judgment" class="sub-section">
-                <h2 class="text">2. Self-Judgment Design</h2>
+            <div id="sec:rewarding" class="sub-section">
+                <h2 class="text">2. Self-Judgment and Reward Generation</h2>
                 <p class="text">
-                    Our judgment design uses a multi-level scoring mechanism to achieve a fine-grained evaluation. We strictly define the scoring range from -1.0 to 1.0 to constrain bias. The system provides two types of feedback:
+                    Next, we devise a dual-level judgment mechanism to assess image quality and prompt alignment.
                 </p>
                 <ul>
-                        <li><strong>Global Reward \(\alpha\)</strong>: A single scalar score that assesses the overall compositional quality and layout of the entire image. </li>
-                        <li><strong>Local Reward \(\mathcal{R}\)</strong>: A dense reward map where each region is scored based on its alignment with specific keywords from the prompt, avoiding interference from irrelevant backgrounds. </li>
+                    <li>
+                        <strong>Local Judgment</strong>: Evaluates object fidelity and artifacts in specific regions using a strict [-1.0, 1.0] scoring scale. A mandatory "Reason" field elicits an interpretable rationale, akin to chain-of-thought, to ensure grounding and transparency.
+                    </li>
+                    <li>
+                        <strong>Global Judgment</strong>: Assesses the holistic composition and spatial alignment of the entire image with the prompt's intent. To avoid unfairly penalizing plausible layouts, a neutral score is applied if the prompt lacks specific compositional directives.
+                    </li>
                 </ul>
                 <p class="text">
-                    This dual-reward system allows the model to refine both the macro-structure and the micro-details of the generated image. 
+                    Following the judgment, we leverage the UMM's grounding capabilities to generate fine-grained reward scores for all relevant image regions. These regional rewards are aggregated into a dense <strong>reward map</strong> for integration into our training objective.
                 </p>
             </div>
 
             <div id="sec:objective" class="sub-section">
-                <h2 class="text">3. Weighted Post-Training Objective</h2>
-
+                <h2 class="text">3. Reward-Weighted Training</h2>
                 <p class="text">
-                    The final training objective \(\mathcal{L}_{~~\text{Total}}\) is a composite loss designed to incorporate the reward feedback while preserving the image's structural integrity. It consists of two main components:
+                    The core of our method is a novel training objective that uses the reward map to refine the model. It consists of two main components:
                 </p>
 
                 <ol>
-                    <li>A <strong>reward-driven term (\(\mathcal{L}_{~\text{r}}\))</strong> that uses the global (\(\alpha\)) and local (\(\mathcal{R}\)) rewards to modulate the learning process, encouraging desired changes (preservation) or penalizing flaws (repulsion). </li>
-                    <li>A <strong>ground-truth constraint term (\(\mathcal{L}_{~\text{ref}}\))</strong> that acts as a regularizer, preventing the model from making drastic changes that distort the overall image structure. </li>
-                </ol>
+                    <li>A <strong>reward-driven term</strong>  $\mathcal{L}_{\text{r}}$ that uses the global score $\alpha$ and the regional reward map $R$ to modulate the training process. This mechanism enables fine-grained control, encouraging preservation where feedback is positive ($\alpha \cdot R > 0$) and repulsion where it is negative ($\alpha \cdot R < 0$).
+                        
+                        $$\mathcal{L}_{\text{r}} = \mathbb{E} \left[ \alpha \cdot R \odot \left( v_\theta - (\epsilon - x_0^{~\text{gt}}) \right)^2 \right]$$
+                        
+                    </li>
+                    <li>A <strong>constraint term</strong> $\mathcal{L}_{\text{ref}}$ that acts as a regularizer. It prevents the model from making drastic changes that distort the overall image structure, thereby preventing reward hacking.
+                        
+                        $$\mathcal{L}_{~~\text{ref}} = \mathbb{E} \left[ \left\| v_\theta - (\epsilon - x_0^{~\text{gt}}) \right\|^2 \right]$$
+                        
+                    </li>
+                    </ol>
 
-                <p class="text">
-                    The combined loss is formulated as: \(\mathcal{L}_{~~\text{Total}} = \mathcal{L}_{~\text{r}} + \lambda_{~\text{c}} \cdot \mathcal{L}_{~\text{ref}}\)
-                </p>
-        </div>
+                    <p class="text">
+                        The final training objective is a weighted sum of these two losses. This composite design enables targeted local refinement while maintaining global coherence and safeguarding the output from significant distortion.
+                    </p>
 
-        <div id='Results' class="vision-block">
-            <h1 class="text">Experimental Results</h1>
-            <p class="text">
-                We evaluated SRUM on several unified models, including <strong>Bagel</strong>, <strong>BLIP3o</strong>, and <strong>OmniGen2</strong>, using prompt words from the T2I-CompBench training set. Our results show that SRUM significantly improves the layout and reasoning capabilities of these models, especially on complex composition and counting tasks.
-            </p>
-            <div style="display: flex; flex-direction: column; align-items: center;" class="figure">
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Model</th>
-                                <th>3d spatial</th>
-                                <th>Color</th>
-                                <th>Complex</th>
-                                <th>Nonspatial</th>
-                                <th>Numeracy</th>
-                                <th>Shape</th>
-                                <th>Spatial</th>
-                                <th>Texture</th>
-                                <th>Overall</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Bagel</td>
-                                <td>77.98</td>
-                                <td>89.30</td>
-                                <td>83.32</td>
-                                <td>85.03</td>
-                                <td>70.40</td>
-                                <td>81.94</td>
-                                <td>81.52</td>
-                                <td>87.93</td>
-                                <td>82.18</td>
-                            </tr>
-                            <tr style="background-color: rgba(0, 255, 0, 0.1);">
-                                <td>Bagel<sub>+SRUM</sub></td>
-                                <td class="highlight">83.10</td>
-                                <td class="highlight">92.90</td>
-                                <td class="highlight">88.69</td>
-                                <td class="highlight">88.47</td>
-                                <td class="highlight">78.52</td>
-                                <td class="highlight">84.23</td>
-                                <td class="highlight">86.92</td>
-                                <td class="highlight">89.57</td>
-                                <td class="highlight">86.55</td>
-                            </tr>
-                            <tr>
-                                <td>BLIP3o</td>
-                                <td>81.73</td>
-                                <td>89.92</td>
-                                <td>85.55</td>
-                                <td>84.78</td>
-                                <td>71.67</td>
-                                <td>83.75</td>
-                                <td>92.47</td>
-                                <td>87.45</td>
-                                <td>84.66</td>
-                            </tr>
-                            <tr style="background-color: rgba(0, 255, 0, 0.1);">
-                                <td>BLIP3o<sub>+SRUM</sub></td>
-                                <td class="highlight">83.78</td>
-                                <td class="highlight">90.22</td>
-                                <td class="highlight">86.57</td>
-                                <td class="highlight">85.10</td>
-                                <td class="highlight">74.52</td>
-                                <td class="highlight">85.44</td>
-                                <td class="highlight">93.88</td>
-                                <td>86.52</td>
-                                <td class="highlight">85.75</td>
-                            </tr>
-                            <tr>
-                                <td>OmniGen2</td>
-                                <td>82.21</td>
-                                <td>92.22</td>
-                                <td>86.87</td>
-                                <td>88.51</td>
-                                <td>72.00</td>
-                                <td>83.95</td>
-                                <td>90.07</td>
-                                <td>90.88</td>
-                                <td>85.84</td>
-                            </tr>
-                            <tr style="background-color: rgba(0, 255, 0, 0.1);">
-                                <td>OmniGen2<sub>+SRUM</sub></td>
-                                <td class="highlight">84.39</td>
-                                <td>92.00</td>
-                                <td class="highlight">87.82</td>
-                                <td>88.14</td>
-                                <td class="highlight">72.95</td>
-                                <td>83.35</td>
-                                <td class="highlight">90.67</td>
-                                <td>90.65</td>
-                                <td class="highlight">86.25</td>
-                            </tr>
-                            <tr>
-                                <td>Bagel (CoT)</td>
-                                <td>84.66</td>
-                                <td>88.85</td>
-                                <td>86.10</td>
-                                <td>85.64</td>
-                                <td>75.36</td>
-                                <td>84.33</td>
-                                <td>82.71</td>
-                                <td>88.07</td>
-                                <td>84.46</td>
-                            </tr>
-                            <tr style="background-color: rgba(0, 255, 0, 0.1);">
-                                <td>Bagel<sub>+SRUM</sub> (CoT)</td>
-                                <td class="highlight">88.60</td>
-                                <td class="highlight">92.90</td>
-                                <td class="highlight">91.31</td>
-                                <td class="highlight">90.48</td>
-                                <td class="highlight">80.12</td>
-                                <td class="highlight">84.47</td>
-                                <td class="highlight">89.93</td>
-                                <td class="highlight">89.15</td>
-                                <td class="highlight">88.37</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <figcaption style="text-align: left; width: 100%;">
-                    <strong>Table 1:</strong> Complete results of T2I-CompBench. Models integrating the SRUM method show consistent and significant improvements across multiple combination categories. Highlighted cells indicate performance gains from SRUM.
-                </figcaption>
+                    $$\mathcal{L}_{~~~\text{Total}} = \mathcal{L}_{\text{r}} + \lambda_{~\text{c}} \cdot \mathcal{L}_{~~\text{ref}}$$
+
             </div>
         </div>
-        
-        <div id='Analysis' class="vision-block">
-            <h1 class="text">Analysis and Insights</h1>
+
+        <div id='Experiments' class="vision-block">
+            <h1 class="text">Experiments and Analysis</h1>
             <p class="text">
-                We conducted extensive empirical studies to understand why SRUM is so effective. Our analysis reveals key insights into the roles of different components and their impact on the generation process.
+                We validated our Self-Rewarding for Unified Multimodal Models (SRUM) framework across various models and benchmarks to investigate several key aspects:
+                <ul>
+                    <li><strong>Performance and Generality:</strong> SRUM achieves state-of-the-art (SOTA) performance on complex compositional generation benchmarks and delivers consistent gains across different Unified Multimodal Model (UMM) frameworks.</li>
+                    <li><strong>Component Efficacy:</strong> Ablation studies confirm that each component of the SRUM framework makes a critical contribution to the overall performance.</li>
+                    <li><strong>Robust Generalization:</strong> SRUM demonstrates strong in-domain and out-of-domain generalization, indicating that its improvements stem from enhanced reasoning capabilities rather than simple data memorization.</li>
+                </ul>
             </p>
 
-            <div id="sec:ablation" class="sub-section">
-                <h2 class="text">Ablation Studies: What Matters Most?</h2>
+            <div id="sec:setup" class="sub-section">
+                <h2 class="text">Experimental Setup</h2>
                 <p class="text">
-                    Our ablation studies on T2I-CompBench highlight the critical role of each component in SRUM. We found that:
-                    <ul>
-                        <li>The <strong>KL constraint</strong> is crucial for preventing the model from "reward hacking" and deviating too far from a stable policy, a finding consistent with other post-training methods like DPO. </li>
-                        <li>Removing the <strong>Global Reward</strong> or using a simple binarized reward leads to significant performance degradation, confirming the value of our fine-grained, multi-level feedback system. </li>
-                    </ul>
+                    <strong>Models:</strong> We evaluate SRUM as a post-training phase on two powerful open-source UMMs: <strong>Bagel</strong> (as our primary model for in-depth analysis, in both standard and Chain-of-Thought modes) and <strong>Blip3o</strong> (to validate general effectiveness).
+                    <br><br>
+                    <strong>Benchmarks:</strong> Our training instruction data is sourced from <strong>T2I-CompBench</strong>, which also serves as our primary evaluation benchmark. To assess generalization, we test in-domain transferability on <strong>GenEval</strong> and <strong>WISE</strong>, and broader, out-of-domain reasoning on the challenging <strong>T2I-ReasonBench</strong>. For objective scoring, we use QwenVL-2.5-72B as the designated multimodal evaluator.
+                </p>
+            </div>
+
+            <div id="sec:main_results" class="sub-section">
+                <h2 class="text">Main Results on T2I-CompBench</h2>
+                <p class="text">
+                    SRUM yields substantial and consistent performance gains across nearly all compositional categories. On T2I-CompBench, <strong>Bagel<sub>+SRUM</sub> with CoT achieved the highest score among UMMs at 88.37</strong>—a significant 3.91-point improvement over its base version. The impact is most pronounced in categories requiring sophisticated reasoning, where we set new SOTA scores.
+                </p>
+                <div style="display: flex; flex-direction: column; align-items: center;" class="figure">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>3d spatial</th>
+                                    <th>Color</th>
+                                    <th>Complex</th>
+                                    <th>Nonspatial</th>
+                                    <th>Numeracy</th>
+                                    <th>Shape</th>
+                                    <th>Spatial</th>
+                                    <th>Texture</th>
+                                    <th>Overall</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="10" style="text-align: center; font-style: italic; background-color: #f8f9fa;">T2I Models</td></tr>
+                                <tr><td>FLUX.1-dev</td><td>76.39</td><td>90.63</td><td>83.51</td><td class="highlight">87.47</td><td class="highlight">75.30</td><td>80.20</td><td>84.23</td><td>87.07</td><td>83.10</td></tr>
+                                <tr><td>FLUX.1-schnell</td><td class="highlight">79.38</td><td>84.53</td><td>81.96</td><td>85.55</td><td>72.82</td><td>82.20</td><td>85.49</td><td>86.38</td><td>82.29</td></tr>
+                                <tr><td>SD-3-medium</td><td>77.83</td><td class="highlight">91.63</td><td class="highlight">84.73</td><td>86.12</td><td>72.80</td><td class="highlight">83.72</td><td class="highlight">88.20</td><td class="highlight">89.03</td><td class="highlight">84.26</td></tr>
+                                <tr><td>SD-xl-base-1</td><td>72.25</td><td>77.75</td><td>75.00</td><td>85.28</td><td>57.14</td><td>72.18</td><td>77.08</td><td>78.38</td><td>74.38</td></tr>
+                                <tr><td colspan="10" style="text-align: center; font-style: italic; background-color: #f8f9fa;">Unified Multimodal Models</td></tr>
+                                <tr><td>Janus-Pro</td><td>76.17</td><td>84.25</td><td>80.28</td><td>80.47</td><td>56.43</td><td>65.14</td><td>79.67</td><td>69.67</td><td>74.01</td></tr>
+                                <tr><td>Show-o2</td><td class="highlight">88.61</td><td>87.73</td><td>87.88</td><td>85.91</td><td>69.74</td><td>73.99</td><td>86.60</td><td>82.17</td><td>82.83</td></tr>
+                                <tr><td>OmniGen2</td><td>82.21</td><td>92.22</td><td>86.87</td><td>88.51</td><td>72.00</td><td>83.95</td><td>90.07</td><td class="highlight">90.88</td><td>85.84</td></tr>
+                                <tr><td colspan="10" style="border-top: 1px solid #dee2e6;"></td></tr>
+                                <tr><td>BLIP3o</td><td>81.73</td><td>89.92</td><td>85.55</td><td>84.78</td><td>71.67</td><td>83.75</td><td>92.47</td><td>87.45</td><td>84.66</td></tr>
+                                <tr><td>Bagel</td><td>77.98</td><td>89.30</td><td>83.32</td><td>85.03</td><td>70.40</td><td>81.94</td><td>81.52</td><td>87.93</td><td>82.18</td></tr>
+                                <tr><td>Bagel (CoT)</td><td>84.66</td><td>88.85</td><td>86.10</td><td>85.64</td><td>75.36</td><td>84.33</td><td>82.71</td><td>88.07</td><td>84.46</td></tr>
+                                <tr><td colspan="10" style="border-top: 1px solid #dee2e6;"></td></tr>
+                                <tr class="gain-row"><td>BLIP3o<sub>+SRUM</sub></td><td>83.78</td><td>90.22</td><td>86.57</td><td>85.10</td><td>74.52</td><td class="highlight">85.44</td><td class="highlight">93.88</td><td>86.52</td><td>85.75</td></tr>
+                                <tr class="gain-row"><td>Bagel<sub>+SRUM</sub></td><td>83.10</td><td class="highlight">92.90</td><td>88.69</td><td>88.47</td><td>78.52</td><td>84.23</td><td>86.92</td><td>89.57</td><td>86.55</td></tr>
+                                <tr class="gain-row"><td>Bagel<sub>+SRUM</sub> (CoT)</td><td>88.60</td><td class="highlight">92.90</td><td class="highlight">91.31</td><td>90.48</td><td class="highlight">80.12</td><td>84.47</td><td>89.93</td><td>89.15</td><td class="highlight">88.37</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <figcaption style="text-align: left; width: 100%;">
+                        <strong>Table 1:</strong> Comprehensive results on T2I-CompBench. Models with SRUM show significant improvements. <strong>Bold</strong> indicates the best score in a column. <span class="gain-cell">Green rows</span> indicate models enhanced by SRUM.
+                    </figcaption>
+                </div>
+            </div>
+            
+            <div id="sec:empirical_study" class="sub-section">
+                <h2 class="text">Empirical Study and Deeper Insights</h2>
+                <p class="text">
+                    For a deeper analysis, we compare three variants of the Bagel model: the <strong>Base Model</strong>, a <strong>SFT Model</strong> (fine-tuned on its own generated data), and our <strong>SRUM Model</strong>.
+                </p>
+
+                <h3 class="text">Ablation Studies: What Matters Most?</h3>
+                <p class="text">
+                    Our ablation studies confirm that each component of SRUM is critical. As shown in the table below, removing any component degrades performance. The omission of the <strong>global reward</strong> led to a notable performance drop, underscoring its importance for capturing holistic compositional structure. Similarly, using a simple <strong>binarized reward</strong> signal was significantly less effective than our fine-grained rewards. The <strong>KL constraint</strong> proved crucial for training stability and preventing reward hacking, a finding consistent with methods like Direct Preference Optimization (DPO).
                 </p>
                 <d-figure>
                     <figure>
-                        <img data-zoomable="" draggable="false" src="static/img/ab_study.png" alt="Ablation Study Results">
-                        <figcaption style="text-align: left; width: 100%;">
-                            <strong>Figure 2:</strong> Ablation results on T2I-CompBench based on Bagel. The full SRUM method outperforms variants where key components like the Global Reward or KL constraint are removed. 
+                        <img data-zoomable="" draggable="false" src="static/img/ab_study.png" alt="SRUM Pipeline">
+                        <figcaption style="text-align: left;">
+                            <strong>Figure 1:</strong> The SRUM pipeline, including reward generation, the design of fine-grained rewards, and their application during the reward-weighted training phase.
                         </figcaption>
                     </figure>
                 </d-figure>
-            </div>
-            
-            <div id="sec:inference_analysis" class="sub-section">
-                <h2 class="text">Analysis of the Inference Process</h2>
+                
+                <h3 class="text">Analysis of the Inference Process</h3>
                 <p class="text">
-                    To get a more granular view, we scored the model's output at each step of the inference process for both "layout" and "detail" quality. This step-by-step analysis revealed that improvements in <strong>layout quality</strong> tend to appear in the early stages of inference, driven by chain-of-thought reasoning and the global reward. In contrast, enhancements in <strong>fine-grained details</strong> become more apparent in the later stages, showcasing the impact of the local rewards.
+                    To get a more granular view, we scored the model's output at each step of the inference process for both "layout" and "detail" quality. The analysis revealed that the Chain-of-Thought ("think") mode and our <strong>global reward</strong> primarily refine the overall <strong>layout</strong> in the early stages of inference. In contrast, improvements in fine-grained <strong>details</strong>, driven by our local rewards, emerge in the later stages. This demonstrates that our dual-reward approach effectively teaches the model to optimize both structure and fidelity.
                 </p>
                 <d-figure>
                     <figure>
                         <img data-zoomable="" draggable="false" src="static/img/plot_layout_score_comparisons_absolute.png" alt="Inference Process Layout Analysis">
+                         <img data-zoomable="" draggable="false" src="static/img/plot_detail_score_comparisons_absolute.png" alt="Inference Process Detail Analysis" style="margin-top: 1em;">
                         <figcaption style="text-align: left; width: 100%;">
-                            <strong>Figure 3:</strong> Layout scores at different inference steps. Global rewards primarily boost layout early on.
+                            <strong>Figure 3:</strong> Layout scores (top) and Detail scores (bottom) at different inference steps. Layout improves early, while detail refinement occurs later.
                         </figcaption>
                     </figure>
                 </d-figure>
+
+                <h3 class="text">Impact on Understanding Capabilities</h3>
+                <p class="text">SRUM enhances generative skills with minimal impact on the model's core understanding capabilities. Evaluations on common VLM benchmarks show only marginal fluctuations compared to the base model. Furthermore, by analyzing functional cluster activations, we found that SFT tends to specialize by suppressing irrelevant capabilities. In contrast, SRUM enhances the primary task-relevant functions while maintaining others, promoting more robust and generalizable representations.</p>
+
                 <d-figure>
-                    <figure>
-                        <img data-zoomable="" draggable="false" src="static/img/plot_detail_score_comparisons_absolute.png" alt="Inference Process Detail Analysis">
-                        <figcaption style="text-align: left; width: 100%;">
-                            <strong>Figure 4:</strong> Detail scores at different inference steps. Detail refinement occurs later, showcasing the impact of local rewards.
-                        </figcaption>
-                    </figure>
-                </d-figure>
-            </div>
-            
-            <div id="sec:generalization" class="sub-section">
-                <h2 class="text">Impressive Generalization</h2>
-                <p class="text">
-                    SRUM demonstrates robust generalization to tasks and domains it wasn't explicitly trained on.
-                    <ul>
-                        <li><strong>In-Domain Generalization</strong>: The model shows strong performance on the GenEval benchmark even when trained only on T2I-CompBench data, proving that the learned skills are transferable. </li>
-                        <li><strong>Out-of-Domain Generalization</strong>: When tested on the challenging T2I-ReasonBench, the SRUM-trained model achieves superior understanding of complex, reasoning-based prompts compared to baseline and SFT models. </li>
-                    </ul>
-                </p>
-                <d-figure>
-                    <figure>
-                        <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-                            <img data-zoomable draggable="false" id="displayLeftImage" src="static/img/wise.jpg" alt="WISE Benchmark" style="max-width: 100%; height: auto; border-radius: 8px;">
-                            <img data-zoomable draggable="false" id="displayRightImage" src="static/img/reasonbench.jpg" alt="ReasonBench Results" style="max-width: 100%; height: auto; border-radius: 8px;">
+                    <div style="display: flex; flex-direction: column; gap: 40px; align-items: center;">
+                        
+                        <div style="width: 100%; max-width: 600px;">
+                            <img data-zoomable="" draggable="false" src="static/img/activation.png" alt="Functional cluster activation patterns" style="width: 100%;">
+                            <figcaption style="text-align: left;"><strong>Figure 4:</strong> Functional cluster activations. SRUM enhances and orchestrates clusters, unlike SFT which simply suppresses them.</figcaption>
                         </div>
-                        <figcaption style="text-align: left; width: 100%;">
-                            <strong>Figure 5:</strong> SRUM shows strong knowledge transfer on the WISE benchmark (top) and superior reasoning accuracy on the T2I-ReasonBench (bottom). 
-                        </figcaption>
-                    </figure>
+
+                        <div style="width: 100%; max-width: 600px;">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead><tr><th>Benchmark</th><th>Base</th><th>SFT</th><th>SRUM</th></tr></thead>
+                                    <tbody>
+                                        <tr><td>MME-Perception</td><td>1687</td><td>1682</td><td>1673</td></tr>
+                                        <tr><td>MME-Cognition</td><td>701</td><td>683</td><td>677</td></tr>
+                                        <tr><td>MMBench</td><td>85.0</td><td>84.6</td><td>84.8</td></tr>
+                                        <tr><td>MM-Vet</td><td>67.2</td><td>66.5</td><td>67.0</td></tr>
+                                        <tr><td>MMMU</td><td>55.3</td><td>55.0</td><td>55.2</td></tr>
+                                        <tr><td>MathVista</td><td>73.1</td><td>72.8</td><td>73.0</td></tr>
+                                        <tr><td>MMVP</td><td>69.3</td><td>68.7</td><td class="highlight">70.0</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <figcaption style="text-align: left;"><strong>Table 2:</strong> Results on understanding benchmarks show SRUM preserves core VLM capabilities.</figcaption>
+                        </div>
+                    </div>
                 </d-figure>
+
+                 <h3 class="text">Generalization Capabilities</h3>
+                 <p class="text">A key strength of SRUM is its robust generalization to new tasks and domains, proving it learns underlying reasoning skills rather than memorizing training data.</p>
+                 <p class="text"><strong>In-Domain Generalization:</strong> When trained only on T2I-CompBench, our model shows strong transferable skills on the <strong>GenEval</strong> benchmark. It achieves the highest scores in key compositional areas like <strong>Counting</strong> and <strong>Color Attribute Binding</strong>, outperforming both the Base and SFT models.</p>
+                <div style="display: flex; flex-direction: column; align-items: center;" class="figure">
+                    <div class="table-container">
+                        <table class="data-table">
+                           <thead><tr><th>Model</th><th>Single obj.</th><th>Two obj.</th><th>Counting</th><th>Colors</th><th>Position</th><th>Color attr.</th></tr></thead>
+                           <tbody>
+                               <tr><td>Bagel</td><td class="highlight">0.99</td><td>0.94</td><td>0.81</td><td>0.88</td><td>0.64</td><td>0.82</td></tr>
+                               <tr><td>Bagel<sub>+SFT</sub></td><td>0.96</td><td>0.94</td><td>0.79</td><td class="highlight">0.92</td><td>0.59</td><td>0.78</td></tr>
+                               <tr><td>Bagel<sub>+SRUM</sub></td><td>0.98</td><td>0.94</td><td class="highlight">0.83</td><td>0.90</td><td>0.64</td><td class="highlight">0.83</td></tr>
+                           </tbody>
+                        </table>
+                    </div>
+                    <figcaption style="text-align: left; width: 100%;"><strong>Table 3:</strong> In-domain generalization results on GenEval show SRUM's superior compositional skills.</figcaption>
+                </div>
+
+                <p class="text" style="margin-top: 1.5em;"><strong>Knowledge-based Generalization:</strong> On the <strong>WISE</strong> benchmark, we found that training SRUM on just one category of reasoning prompts universally enhances performance on the other unseen categories, demonstrating effective knowledge transfer.</p>
+                 <d-figure><figure><img data-zoomable draggable="false" src="static/img/wise.jpg" alt="WISE Benchmark Results"><figcaption style="text-align: left; width: 100%;"><strong>7:</strong> Results on the WISE benchmark show strong knowledge transfer.</figcaption></figure></d-figure>
+                
+                 <p class="text" style="margin-top: 1.5em;"><strong>Out-of-Domain Generalization:</strong> To test generalization to truly unseen domains, we evaluated our model on <strong>T2I-ReasonBench</strong>. SRUM achieves a superior understanding of complex instructions compared to both SFT and Base models, confirming that our algorithmic design improves generalization on complex problems from both a data and an algorithmic perspective.</p>
+                 <div style="display: flex; flex-direction: column; align-items: center;" class="figure">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead><tr><th rowspan="2">Model</th><th colspan="2">Entity</th><th colspan="2">Idiom</th><th colspan="2">Scientific</th><th colspan="2">Textual Image</th></tr><tr><th>Acc.</th><th>Qual.</th><th>Acc.</th><th>Qual.</th><th>Acc.</th><th>Qual.</th><th>Acc.</th><th>Qual.</th></tr></thead>
+                            <tbody>
+                                <tr><td>Bagel</td><td>36.9</td><td>88.1</td><td>29.7</td><td>77.3</td><td>40.2</td><td class="highlight">69.5</td><td>40.49</td><td>71.5</td></tr>
+                                <tr><td>Bagel<sub>+SFT</sub></td><td>38.4</td><td>86.9</td><td>35.1</td><td>78.4</td><td>40.3</td><td>68.9</td><td>41.2</td><td>70.0</td></tr>
+                                <tr><td>Bagel<sub>+SRUM</sub></td><td class="highlight">40.9</td><td class="highlight">88.7</td><td class="highlight">36.1</td><td class="highlight">80.2</td><td class="highlight">40.7</td><td>69.2</td><td class="highlight">42.86</td><td class="highlight">72.6</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                     <figcaption style="text-align: left; width: 100%;"><strong>Table 4:</strong> Out-of-domain results on T2I-ReasonBench. SRUM consistently outperforms baselines in reasoning accuracy.</figcaption>
+                </div>
+
             </div>
+        </div>
 
 
 
@@ -387,15 +553,14 @@
         <div id="discussion" style="position: relative; margin-top: 40px; margin-bottom: 0px;">
             <h2 class="text" style="margin-top:0px; margin-bottom:10px">Discussion</h2>
             <p class="text">
-                SRUM is just a preliminary exploration of Unified Models (UMs). We found that there is still room for improvement in the prompts for the understanding part during the scoring phase, and we hope to scale this method to larger datasets. This article also utilizes some external prompts to improve performance for illustrative purposes. In fact, it is entirely possible to allow the understanding part to <strong>self-play questions and answers</strong> to build a more closed-loop training system.
+                SRUM is just a preliminary exploration of Unified Multimodal Models (UMMs). We found that there is still room for improvement in the prompts for the understanding part during the scoring phase, and we hope to scale this method to larger datasets. This article also utilizes some external prompts to improve performance for illustrative purposes. In fact, it is entirely possible to allow the understanding part to <strong>self-play questions and answers</strong> to build a more closed-loop training system.
             </p>
         </div>
 
         <div id="conclusion" style="position: relative; margin-top: 40px; margin-bottom: 0px;">
             <h2 class="text" style="margin-top:0px; margin-bottom:10px">Conclusion</h2>
             <p class="text">
-                SRUM is a self-rewarding framework that enhances compositional reasoning in unified models. It moves beyond costly external judges by leveraging a model's inherent understanding-generation duality. The model's comprehension module provides fine-grained, internal reward signals to its generative counterpart, creating an efficient optimization loop. Rewards are decomposed into global composition and local attribute fidelity for multi-scale alignment. Experiments on T2I-CompBench and T2I-ReasonBench show significant performance gains and strong generalization, validating the framework's effectiveness and potential for future multimodal applications.
-            </p>
+This paper introduces SRUM, a fine-grained post-training framework that enables a model's understanding module to reward its generative module. Addtionally , SRUM decomposes the reward into local and global components, facilitating multi-scale alignment and refinement. Extensive experiments validate SRUM's effectiveness, setting new state-of-the-art results on complex compositional and reasoning benchmarks such as T2I-CompBench and T2I-ReasonBench. The framework demonstrates robust in-domain and out-of-domain generalization, and our empirical analysis confirms the efficacy of the fine-grained reward design. These findings illuminate the synergistic development of understanding and generation capabilities within a single model and establish the principle of self-reward as a promising direction for future research.            </p>
         </div>
 
         </d-article>
@@ -403,8 +568,8 @@
         <h3>BibTeX</h3>
         <p class="bibtex">
             @article{jin2025srum,<br>
-            &nbsp;&nbsp;title={SRUM: Fine-Grained Self-Rewarding for Unified Models},<br>
-            &nbsp;&nbsp;author={Jin, Weiyang and Niu, Yuwei and Liao, Jiaqi and Duan, Chengqi and Liu, Xihui},<br>
+            &nbsp;&nbsp;title={SRUM: Fine-Grained Self-Rewarding for Unified Multimodal Models},<br>
+            &nbsp;&nbsp;author={Jin, Weiyang and Niu, Yuwei and Liao, Jiaqi and Duan, Chengqi and Li, Aoxue and Gao, Shenghua and Liu, Xihui},<br>
             &nbsp;&nbsp;journal={arXiv preprint arXiv:your_arxiv_id},<br>
             &nbsp;&nbsp;year={2025}<br>
             }
@@ -424,5 +589,48 @@
         </div>
         <p style="margin:0;">Copyright © 2025</p>
     </footer>
-</body>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.comparison-slider').forEach(slider => {
+                let isDragging = false;
+
+                const setSliderPosition = (e) => {
+                    const rect = slider.getBoundingClientRect();
+                    let x = (e.clientX || e.touches[0].clientX) - rect.left;
+                    x = Math.max(0, Math.min(x, rect.width));
+                    const percent = (x / rect.width) * 100;
+                    
+                    slider.querySelector('.after-image').style.clipPath = `polygon(${percent}% 0, 100% 0, 100% 100%, ${percent}% 100%)`;
+                    slider.querySelector('.slider-handle').style.left = `${percent}%`;
+                };
+
+                const startDrag = (e) => {
+                    e.preventDefault();
+                    isDragging = true;
+                };
+
+                const stopDrag = () => {
+                    isDragging = false;
+                };
+
+                const onDrag = (e) => {
+                    if (!isDragging) return;
+                    setSliderPosition(e);
+                };
+
+                slider.addEventListener('mousedown', startDrag);
+                slider.addEventListener('touchstart', startDrag, { passive: true });
+
+                window.addEventListener('mouseup', stopDrag);
+                window.addEventListener('touchend', stopDrag);
+                
+                window.addEventListener('mousemove', onDrag);
+                window.addEventListener('touchmove', onDrag, { passive: true });
+
+                slider.addEventListener('click', setSliderPosition);
+            });
+        });
+    </script>
+    </body>
 </html>
