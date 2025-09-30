@@ -450,10 +450,10 @@
                     Our ablation studies confirm that each component of SRUM is critical. As shown in the table below, removing any component degrades performance. The omission of the <strong>global reward</strong> led to a notable performance drop, underscoring its importance for capturing holistic compositional structure. Similarly, using a simple <strong>binarized reward</strong> signal was significantly less effective than our fine-grained rewards. The <strong>KL constraint</strong> proved crucial for training stability and preventing reward hacking, a finding consistent with methods like Direct Preference Optimization (DPO).
                 </p>
                 <d-figure>
-                    <figure>
-                        <img data-zoomable="" draggable="false" src="static/img/ab_study.png" alt="SRUM Pipeline">
+                    <figure style="text-align: center;">
+                        <img data-zoomable="" draggable="false" src="static/img/ab_study.png" alt="ab_study" style="width: 550px;">
                         <figcaption style="text-align: left;">
-                            <strong>Figure 1:</strong> The SRUM pipeline, including reward generation, the design of fine-grained rewards, and their application during the reward-weighted training phase.
+                            <strong>Figure 2:</strong> The results of ablation study. $\Delta$ Acc. shows the degradation relative to the complete SRUM method. Specifically, 0-1 Reward represents the binarized reward.
                         </figcaption>
                     </figure>
                 </d-figure>
@@ -521,7 +521,7 @@
                 </div>
 
                 <p class="text" style="margin-top: 1.5em;"><strong>Knowledge-based Generalization:</strong> On the <strong>WISE</strong> benchmark, we found that training SRUM on just one category of reasoning prompts universally enhances performance on the other unseen categories, demonstrating effective knowledge transfer.</p>
-                 <d-figure><figure><img data-zoomable draggable="false" src="static/img/wise.jpg" alt="WISE Benchmark Results"><figcaption style="text-align: left; width: 100%;"><strong>7:</strong> Results on the WISE benchmark show strong knowledge transfer.</figcaption></figure></d-figure>
+                 <d-figure><figure><img data-zoomable draggable="false" src="static/img/wise.jpg" alt="WISE Benchmark Results"><figcaption style="text-align: left; width: 100%;"><strong>Figure 5:</strong> Results on the WISE benchmark show strong knowledge transfer.</figcaption></figure></d-figure>
                 
                  <p class="text" style="margin-top: 1.5em;"><strong>Out-of-Domain Generalization:</strong> To test generalization to truly unseen domains, we evaluated our model on <strong>T2I-ReasonBench</strong>. SRUM achieves a superior understanding of complex instructions compared to both SFT and Base models, confirming that our algorithmic design improves generalization on complex problems from both a data and an algorithmic perspective.</p>
                  <div style="display: flex; flex-direction: column; align-items: center;" class="figure">
