@@ -93,23 +93,6 @@
                 min-width: 350px;
                 max-width: 450px;
             }
-            .bibtex {
-                /* --- 核心：宽度与居中 --- */
-                max-width: 800px;      /* 1. 设置最大宽度，使其与正文宽度类似 (可按需调整) */
-                margin-left: auto;     /* 2. 自动外边距实现水平居中 */
-                margin-right: auto;    /* 3. 自动外边距实现水平居中 */
-
-                /* --- 可选：美化样式 --- */
-                padding: 20px;         /* 增加内边距，让内容有呼吸空间 */
-                background-color: #f8f9fa; /* 添加浅灰色背景，使其看起来像一个代码块 */
-                border-radius: 5px;    /* 添加圆角 */
-                border: 1px solid #dee2e6; /* 添加一个细边框 */
-
-                /* --- 保留：内部文字换行设置 --- */
-                white-space: pre-wrap;   /* 允许长文本自动换行，同时保留缩进 */
-                word-break: break-word;    /* 允许在长单词内部断开 */
-                line-height: 1.6;        /* 增加行高，让引用更易读 */
-            }
             .comparison-slider {
                 position: relative;
                 width: 100%;
@@ -573,6 +556,7 @@
             <h2 class="text" style="margin-top:0px; margin-bottom:10px">Conclusion</h2>
             <p class="text">
 This paper introduces SRUM, a fine-grained post-training framework that enables a model's understanding module to reward its generative module. Addtionally , SRUM decomposes the reward into local and global components, facilitating multi-scale alignment and refinement. Extensive experiments validate SRUM's effectiveness, setting new state-of-the-art results on complex compositional and reasoning benchmarks such as T2I-CompBench and T2I-ReasonBench. The framework demonstrates robust in-domain and out-of-domain generalization, and our empirical analysis confirms the efficacy of the fine-grained reward design. These findings illuminate the synergistic development of understanding and generation capabilities within a single model and establish the principle of self-reward as a promising direction for future research.            </p>
+            </p>        
         </div>
 
         </d-article>
@@ -589,7 +573,7 @@ This paper introduces SRUM, a fine-grained post-training framework that enables 
 
         <d-footnote-list></d-footnote-list>
         <d-citation-list></d-citation-list>
-    </d-appendix>
+        </d-appendix>
 
 
     <d-bibliography src="bibliography.bib"></d-bibliography>
