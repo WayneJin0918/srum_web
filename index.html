@@ -209,7 +209,7 @@
                             </div>
                             <div class="icon-item">
                                 <img src="./static/img/icons/sota.svg" alt="SOTA Icon">
-                                <div><strong>State-of-the-Art Improvements</strong>: SRUM significantly improves compositional problems and reasoning generation, achieving SOTA results on T2I-CompBench (82.18 &rarr; 88.37) and T2I-ReasonBench (40.7 &rarr; 50.4 Acc.). </div>
+                                <div><strong>State-of-the-Art Improvements</strong>: SRUM significantly improves compositional and reasoning-informed generation, achieving SOTA results on T2I-CompBench (82.18 &rarr; 88.37) and T2I-ReasonBench (40.7 &rarr; 50.4 Acc.). </div>
                             </div>
                         </div>
 
@@ -331,13 +331,13 @@
                 </figure>
             </d-figure>
             <p class="text">
-                This section details the SRUM pipeline. Our process begins with generating high-quality image candidates using a Unified Multimodal Model (UMM). These candidates are then meticulously evaluated by a dual-level system that assesses both local fidelity and global composition. The resulting scores are transformed into a dense, spatially-aware reward map, which is integrated into a novel reward-weighted training objective. This allows for targeted, region-specific model refinement while preventing "reward hacking."
+                This section details the SRUM pipeline. Our process begins with generating high-quality image candidates using a Unified Multimodal Models (UMMs). These candidates are then meticulously evaluated by a dual-level system that assesses both local fidelity and global composition. The resulting scores are transformed into a dense, spatially-aware reward map, which is integrated into a novel reward-weighted training objective. This allows for targeted, region-specific model refinement while preventing "reward hacking."
             </p>
 
             <div id="sec:data_gen" class="sub-section">
                 <h2 class="text">1. Image & Bounding Box Generation</h2>
                 <p class="text">
-                    As shown in the figure, our pipeline begins by using a UMM to synthesize candidate images from input prompts, leveraging a "think" mode (Chain-of-Thought) for high-fidelity outputs. We then produce bounding box proposals for each image. To enable precise grounding for the reward modeling, the UMM's understanding module filters these proposals, retaining only those that are semantically aligned with the initial prompt.
+                    As shown in the figure, our pipeline begins by using a UMMs to synthesize candidate images from input prompts, leveraging a "think" mode (Chain-of-Thought) for high-fidelity outputs. We then produce bounding box proposals for each image. To enable precise grounding for the reward modeling, the UMMs' understanding module filters these proposals, retaining only those that are semantically aligned with the initial prompt.
                 </p>
             </div>
             
@@ -348,14 +348,14 @@
                 </p>
                 <ul>
                     <li>
-                        <strong>Local Judgment</strong>: Evaluates object fidelity and artifacts in specific regions using a strict [-1.0, 1.0] scoring scale. A mandatory "Reason" field elicits an interpretable rationale, akin to chain-of-thought, to ensure grounding and transparency.
+                        <strong>Local Judgment</strong>:It checks specific parts of an object to see how accurate it is and to find any visual mistakes. Model must rate it on a strict scale from -1.0 to 1.0 and explain exactly why you gave that score, showing your step-by-step thinking. This makes the whole process clear and trustworthy.
                     </li>
                     <li>
-                        <strong>Global Judgment</strong>: Assesses the holistic composition and spatial alignment of the entire image with the prompt's intent. To avoid unfairly penalizing plausible layouts, a neutral score is applied if the prompt lacks specific compositional directives.
+                        <strong>Global Judgment</strong>: It checks if the overall layout of the entire image matches what the user's prompt wanted. To be fair, if the prompt didn't give specific instructions on how things should be arranged, we just give it a neutral score. This way, a perfectly good layout doesn't get marked down unfairly.
                     </li>
                 </ul>
                 <p class="text">
-                    Following the judgment, we leverage the UMM's grounding capabilities to generate fine-grained reward scores for all relevant image regions. These regional rewards are aggregated into a dense <strong>reward map</strong> for integration into our training objective.
+                    Following the judgment, we leverage the UMMs' grounding capabilities to generate fine-grained reward scores for all relevant image regions. These regional rewards are aggregated into a dense <strong>reward map</strong> for integration into our training objective.
                 </p>
             </div>
 
@@ -392,7 +392,7 @@
             <p class="text">
                 We validated our Self-Rewarding for Unified Multimodal Models (SRUM) framework across various models and benchmarks to investigate several key aspects:
                 <ul>
-                    <li><strong>Performance and Generality:</strong> SRUM achieves state-of-the-art (SOTA) performance on complex compositional generation benchmarks and delivers consistent gains across different Unified Multimodal Model (UMM) frameworks.</li>
+                    <li><strong>Performance and Generality:</strong> SRUM achieves state-of-the-art (SOTA) performance on complex compositional generation benchmarks and delivers consistent gains across different Unified Multimodal Models (UMMs) frameworks.</li>
                     <li><strong>Component Efficacy:</strong> Ablation studies confirm that each component of the SRUM framework makes a critical contribution to the overall performance.</li>
                     <li><strong>Robust Generalization:</strong> SRUM demonstrates strong in-domain and out-of-domain generalization, indicating that its improvements stem from enhanced reasoning capabilities rather than simple data memorization.</li>
                 </ul>
