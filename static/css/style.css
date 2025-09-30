@@ -1451,6 +1451,10 @@ iframe {
     font-size: 1em;
 }
 
+.centered-header {
+  text-align: center; /* 确保文本水平居中 */
+}
+
 /* Demo Showcase Styles */
 .demo-showcase {
     margin: 2rem 0;
