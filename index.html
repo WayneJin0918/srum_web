@@ -447,7 +447,7 @@
 
                 <h3 class="text">Ablation Studies: What Matters Most?</h3>
                 <p class="text">
-                    Our ablation studies confirm that each component of SRUM is critical. As shown in the table below, removing any component degrades performance. The omission of the <strong>global reward</strong> led to a notable performance drop, underscoring its importance for capturing holistic compositional structure. Similarly, using a simple <strong>binarized reward</strong> signal was significantly less effective than our fine-grained rewards. The <strong>KL constraint</strong> proved crucial for training stability and preventing reward hacking, a finding consistent with methods like Direct Preference Optimization (DPO).
+                    Our ablation studies confirm that each component of SRUM is critical. As shown in the table below, removing any component degrades performance. The omission of the <strong>global reward</strong> led to a notable performance drop, underscoring its importance for capturing holistic compositional structure. Similarly, using a simple <strong>binarized reward</strong> signal was significantly less effective than our fine-grained rewards. The <strong>KL constraint</strong> proved crucial for training stability and preventing reward hacking, a finding consistent with methods like Direct Preference Optimization (DPO). We also we analyze the effect of different constraint ratios on the experimental outcomes. Across both Bagel with CoT and without CoT configurations, the results consistently indicate that $\lambda_{c} = 0.5$ is the most effective choice.
                 </p>
                 <d-figure>
                     <figure style="text-align: center;">
@@ -457,7 +457,14 @@
                         </figcaption>
                     </figure>
                 </d-figure>
-                
+                <d-figure>
+                    <figure style="text-align: center;">
+                        <img data-zoomable="" draggable="false" src="static/img/kl_ab.png" alt="ab_study" style="width: 550px;">
+                        <figcaption style="text-align: left;">
+                            <strong>Figure 3:</strong> Hyperparameters Evaluation on T2I-CompBench. We report the accuracy in different $\lambda$ under two inference modes: CoT and without CoT.
+                        </figcaption>
+                    </figure>
+                </d-figure>                
                 <h3 class="text">Analysis of the Inference Process</h3>
                 <p class="text">
                     To get a more granular view, we scored the model's output at each step of the inference process for both "layout" and "detail" quality. The analysis revealed that the Chain-of-Thought ("think") mode and our <strong>global reward</strong> primarily refine the overall <strong>layout</strong> in the early stages of inference. In contrast, improvements in fine-grained <strong>details</strong>, driven by our local rewards, emerge in the later stages. This demonstrates that our dual-reward approach effectively teaches the model to optimize both structure and fidelity.
@@ -467,7 +474,7 @@
                         <img data-zoomable="" draggable="false" src="static/img/plot_layout_score_comparisons_absolute.png" alt="Inference Process Layout Analysis">
                          <img data-zoomable="" draggable="false" src="static/img/plot_detail_score_comparisons_absolute.png" alt="Inference Process Detail Analysis" style="margin-top: 1em;">
                         <figcaption style="text-align: left; width: 100%;">
-                            <strong>Figure 3:</strong> Layout scores (top) and Detail scores (bottom) at different inference steps. Layout improves early, while detail refinement occurs later.
+                            <strong>Figure 4:</strong> Layout scores (top) and Detail scores (bottom) at different inference steps. Layout improves early, while detail refinement occurs later.
                         </figcaption>
                     </figure>
                 </d-figure>
@@ -480,7 +487,7 @@
                         
                         <div style="width: 100%; max-width: 600px;">
                             <img data-zoomable="" draggable="false" src="static/img/activation.png" alt="Functional cluster activation patterns" style="width: 100%;">
-                            <figcaption style="text-align: left;"><strong>Figure 4:</strong> Functional cluster activations. SRUM enhances and orchestrates clusters, unlike SFT which simply suppresses them.</figcaption>
+                            <figcaption style="text-align: left;"><strong>Figure 5:</strong> Functional cluster activations. SRUM enhances and orchestrates clusters, unlike SFT which simply suppresses them.</figcaption>
                         </div>
 
                         <div style="width: 100%; max-width: 600px;">
@@ -521,7 +528,7 @@
                 </div>
 
                 <p class="text" style="margin-top: 1.5em;"><strong>Knowledge-based Generalization:</strong> On the <strong>WISE</strong> benchmark, we found that training SRUM on just one category of reasoning prompts universally enhances performance on the other unseen categories, demonstrating effective knowledge transfer.</p>
-                 <d-figure><figure><img data-zoomable draggable="false" src="static/img/wise.jpg" alt="WISE Benchmark Results"><figcaption style="text-align: left; width: 100%;"><strong>Figure 5:</strong> Results on the WISE benchmark show strong knowledge transfer.</figcaption></figure></d-figure>
+                 <d-figure><figure><img data-zoomable draggable="false" src="static/img/wise.jpg" alt="WISE Benchmark Results"><figcaption style="text-align: left; width: 100%;"><strong>Figure 6:</strong> Results on the WISE benchmark show strong knowledge transfer.</figcaption></figure></d-figure>
                 
                  <p class="text" style="margin-top: 1.5em;"><strong>Out-of-Domain Generalization:</strong> To test generalization to truly unseen domains, we evaluated our model on <strong>T2I-ReasonBench</strong>. SRUM achieves a superior understanding of complex instructions compared to both SFT and Base models, confirming that our algorithmic design improves generalization on complex problems from both a data and an algorithmic perspective.</p>
                  <div style="display: flex; flex-direction: column; align-items: center;" class="figure">
