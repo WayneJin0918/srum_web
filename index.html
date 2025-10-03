@@ -373,7 +373,7 @@
         <div id='Experiments' class="vision-block">
             <h1 class="text">Experiments and Analysis</h1>
             <p class="text">
-                We validated our Self-Rewarding for Unified Multimodal Models (SRUM) framework across various models and benchmarks to investigate several key aspects:
+                We validated our SRUM framework across various models and benchmarks to investigate several key aspects:
                 <ul>
                     <li><strong>Performance and Generality:</strong> SRUM achieves state-of-the-art (SOTA) performance on complex compositional generation benchmarks and delivers consistent gains across different Unified Multimodal Models (UMMs) frameworks.</li>
                     <li><strong>Component Efficacy:</strong> Ablation studies confirm that each component of the SRUM framework makes a critical contribution to the overall performance.</li>
@@ -534,11 +534,13 @@
                  <div style="display: flex; flex-direction: column; align-items: center;" class="figure">
                     <div class="table-container">
                         <table class="data-table">
-                            <thead><tr><th rowspan="2">Model</th><th colspan="2" class="centered-header">Entity</th><th colspan="2" class="centered-header">Idiom</th><th colspan="2" class="centered-header">Scientific</th><th colspan="2" class="centered-header">Textual Image</th></tr><tr><th>Acc.</th><th>Qual.</th><th>Acc.</th><th>Qual.</th><th>Acc.</th><th>Qual.</th><th>Acc.</th><th>Qual.</th></tr></thead>
+                            <thead>
+                                <tr><th>Model</th><th>Entity</th><th>Idiom</th><th>Scientific</th><th>Textual</th><th>Overall</th></tr>
+                            </thead>
                             <tbody>
-                                <tr><td>Bagel</td><td>36.9</td><td>88.1</td><td>29.7</td><td>77.3</td><td>40.2</td><td class="highlight">69.5</td><td>40.49</td><td>71.5</td></tr>
-                                <tr><td>Bagel<sub>+SFT</sub></td><td>38.4</td><td>86.9</td><td>35.1</td><td>78.4</td><td>40.3</td><td>68.9</td><td>41.2</td><td>70.0</td></tr>
-                                <tr><td>Bagel<sub>+SRUM</sub></td><td class="highlight">40.9</td><td class="highlight">88.7</td><td class="highlight">36.1</td><td class="highlight">80.2</td><td class="highlight">40.7</td><td>69.2</td><td class="highlight">42.86</td><td class="highlight">72.6</td></tr>
+                                <tr><td>Bagel</td><td>49.70</td><td>34.46</td><td>47.52</td><td>43.59</td><td>43.82</td></tr>
+                                <tr><td>Bagel<sub>+SFT</sub></td><td>50.53</td><td>39.43</td><td>47.45</td><td>44.08</td><td>45.37</td></tr>
+                                <tr><td>Bagel<sub>+SRUM</sub></td><td class="highlight">52.85</td><td class="highlight">40.51</td><td class="highlight">47.83</td><td class="highlight">45.83</td><td class="highlight">46.75</td></tr>
                             </tbody>
                         </table>
                     </div>
